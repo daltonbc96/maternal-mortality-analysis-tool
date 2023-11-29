@@ -1,0 +1,12 @@
+name: mortalidad_materna
+title: mortalidad_materna
+username: 608dtc-dalton-costa
+account: 608dtc-dalton-costa
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 10670608
+bundleId: 7986398
+url: https://608dtc-dalton-costa.shinyapps.io/mortalidad_materna/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
