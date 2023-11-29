@@ -1,5 +1,8 @@
 # Maternal Mortality Analysis Tool
 
+## Access
+Link: https://608dtc-dalton-costa.shinyapps.io/mortalidad_materna/_w_ee7a6664/
+
 ## Description
 This repository contains the source code for the Maternal Mortality Analysis Tool, designed to provide a detailed and critical view of the main causes and patterns of maternal mortality. The tool is intended to support public health professionals, researchers, and policy makers in understanding and combating maternal mortality.
 
