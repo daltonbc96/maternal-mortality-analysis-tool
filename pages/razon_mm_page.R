@@ -50,7 +50,7 @@ razon_mm_page <- argonTabItem(
             width = 6,
             selectInput(
               inputId = "departamento1",
-              label = "Departamento:",
+              label = "Nivel Administrativo 1:",
               choices = NULL,
               selected = NULL
             )
@@ -111,7 +111,7 @@ razon_mm_page <- argonTabItem(
             width = 6,
             selectInput(
               inputId = "departamento2",
-              label = "Departamento:",
+              label = "Nivel Administrativo 2:",
               choices = NULL,
               selected = NULL
             )

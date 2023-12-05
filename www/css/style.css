@@ -1,0 +1,11 @@
+
+#my_sidebar .navbar-brand img {
+    width: 200px;
+    height: auto;
+  }
+
+.dataTables_wrapper .dataTable thead {
+    background-color: #4C78A8;
+    color: white;           
+  }
+

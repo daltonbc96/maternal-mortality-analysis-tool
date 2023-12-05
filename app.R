@@ -16,13 +16,7 @@ source("server/setting_server.R")
 
 
 ui <- fluidPage(
-  tags$head(tags$style(
-    HTML("
-      #my_sidebar .navbar-brand img {
-        width: 200px;
-        height: auto;
-      }")
-  )),
+  tags$link(rel = "stylesheet", type = "text/css", href = "css/style.css"),
   argonDashPage(
     title = "Mortalidad Materna",
     description = 'Testing',

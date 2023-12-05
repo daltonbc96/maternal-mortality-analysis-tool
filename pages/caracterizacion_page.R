@@ -1,5 +1,4 @@
 
-
 source("server/simulatedData.R")
 
 lista_paises <<- simulated_data()
@@ -51,7 +50,7 @@ caracterizacion_page <- argonTabItem(
             width = 6,
             selectInput(
               inputId = "departamento11",
-              label = "Departamento:",
+              label = "Nivel Administrativo 1:",
               choices = NULL,
               selected = NULL
             )
@@ -60,7 +59,7 @@ caracterizacion_page <- argonTabItem(
             width = 6,
             selectInput(
               inputId = "municipio11",
-              label = "Municipio:",
+              label = "Nivel Administrativo 2:",
               choices = NULL,
               selected = NULL
             )
@@ -112,7 +111,7 @@ caracterizacion_page <- argonTabItem(
             width = 6,
             selectInput(
               inputId = "departamento22",
-              label = "Departamento:",
+              label = "Nivel Administrativo 1:",
               choices = NULL,
               selected = NULL
             )
@@ -121,7 +120,7 @@ caracterizacion_page <- argonTabItem(
             width = 6,
             selectInput(
               inputId = "municipio22",
-              label = "Municipio:",
+              label = "Nivel Administrativo 2:",
               choices = NULL,
               selected = NULL
             )
@@ -157,10 +156,9 @@ caracterizacion_page <- argonTabItem(
         shadow = T,
         background_color = '#f6f9fc',
         title = h2("Muertes Maternas", style = 'color:#009cda;'),
-        
-        
-        shinycssloaders::withSpinner(uiOutput("plotlyGraphUI1"))
+        shinycssloaders::withSpinner(uiOutput("plotOutput1"))
       )
+    
     ),
     
     argonColumn(
@@ -171,7 +169,65 @@ caracterizacion_page <- argonTabItem(
         shadow = T,
         background_color = '#f6f9fc',
         title = h2("Muertes Maternas", style = 'color:#009cda;'),
-        shinycssloaders::withSpinner(uiOutput("plotlyGraphUI2"))
+        shinycssloaders::withSpinner(uiOutput("plotOutput2"))
+      )
+    )
+    
+  ),
+  argonRow(
+    argonColumn(
+      width = 6,
+      argonCard(
+        width = 12,
+        border_level = 10,
+        shadow = T,
+        background_color = '#f6f9fc',
+        title = h2("Recibió Asistencia Media Antes de Morir", style = 'color:#009cda;'),
+        
+        shinycssloaders::withSpinner(uiOutput("plotOutput5"))
+      )
+    ),
+    
+    argonColumn(
+      width = 6,
+      argonCard(
+        width = 12,
+        border_level = 10,
+        shadow = T,
+        background_color = '#f6f9fc',
+        title = h2("Recibió Asistencia Media Antes de Morir", style = 'color:#009cda;'),
+        shinycssloaders::withSpinner(uiOutput("plotOutput6"))
+      )
+    )
+    
+  ),
+  
+  
+  
+  argonRow(
+    argonColumn(
+      width = 6,
+      argonCard(
+        width = 12,
+        border_level = 10,
+        shadow = T,
+        background_color = '#f6f9fc',
+        title = h2("Grupos de Edad", style = 'color:#009cda;'),
+        
+        
+        shinycssloaders::withSpinner(uiOutput("plotOutput3"))
+      )
+    ),
+    
+    argonColumn(
+      width = 6,
+      argonCard(
+        width = 12,
+        border_level = 10,
+        shadow = T,
+        background_color = '#f6f9fc',
+        title = h2("Grupos de Edad", style = 'color:#009cda;'),
+        shinycssloaders::withSpinner(uiOutput("plotOutput4"))
       )
     )
     
@@ -185,10 +241,9 @@ caracterizacion_page <- argonTabItem(
         border_level = 10,
         shadow = T,
         background_color = '#f6f9fc',
-        title = h2("Grupos de Edad", style = 'color:#009cda;'),
+        title = h2("Porcentaje de Causas de Muertes por Código CIE-10", style = 'color:#009cda;'),
         
-        
-        shinycssloaders::withSpinner(uiOutput("plotlyGraphUI3"))
+        shinycssloaders::withSpinner(uiOutput("table1", style = "width: 100%; overflow-x: auto; font-size:10px"))  
       )
     ),
     
@@ -199,12 +254,14 @@ caracterizacion_page <- argonTabItem(
         border_level = 10,
         shadow = T,
         background_color = '#f6f9fc',
-        title = h2("Grupos de Edad", style = 'color:#009cda;'),
-        shinycssloaders::withSpinner(uiOutput("plotlyGraphUI4"))
+        title = h2("Porcentaje de Causas de Muertes por Código CIE-10", style = 'color:#009cda;'),
+        shinycssloaders::withSpinner(uiOutput("table2", style = "width: 100%; overflow-x: auto; font-size:10px"))  
+        
       )
     )
     
   ),
+
   argonRow(argonColumn(
     width = 12,
     argonCard(

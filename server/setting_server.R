@@ -6,6 +6,9 @@ source("server/renderScatterPlotlyGraph.R")
 source("server/updateSelectInputs.R")
 source("server/filterData.R")
 source("server/simulatedData.R")
+source("server/renderizar_tabela.R")
+source("server/createBarPlot.R")
+source("server/createAreaPlot.R")
 
 
 
@@ -14,6 +17,9 @@ server <- function(input, output, session) {
   
   #listar paises 
   lista_paises <<- simulated_data()
+  loading11 <- reactiveVal(FALSE)
+  loading22 <- reactiveVal(FALSE)
+ 
   
   #atualizar campos de filtragem de acordo com lista de paises
   updateSelectInputs(input, session, lista_paises, "pais1", "departamento1", "municipio1", "fecha_inicio1", "fecha_final1")
@@ -34,137 +40,79 @@ server <- function(input, output, session) {
   
    updateSelectInputs(input, session, lista_paises, "pais25", "departamento25", "municipio25", "fecha_inicio25", "fecha_final25")
   
+
+ 
+   
+ #Data
+   dados_filtrados_caracterizacion_1 <- eventReactive(input$btnGerar11, {
+     loading11(TRUE) 
+     on.exit(loading11(FALSE))
+     filterData(lista_paises, input$pais11, input$departamento11, input$municipio11, input$fecha_inicio11, input$fecha_final11)
+   }, ignoreNULL = FALSE)
+   
+   
+   dados_filtrados_caracterizacion_2 <- eventReactive(input$btnGerar22, {
+     loading22(TRUE) 
+     on.exit(loading22(FALSE))
+     filterData(lista_paises, input$pais22, input$departamento22, input$municipio22, input$fecha_inicio22, input$fecha_final22)
+   }, ignoreNULL = FALSE)
+   
+
+   
   
-  #dados filtrados conforme filtro
-  
-  dataFiltered_caracterizacion_1 <- eventReactive(input$btnGerar11, {
-    filterData(lista_paises, input$pais11, input$departamento11, input$municipio11, input$fecha_inicio11, input$fecha_final11)
-  })
-  
-  dataFiltered_caracterizacion_2 <- eventReactive(input$btnGerar22, {
-    filterData(lista_paises, input$pais22, input$departamento22, input$municipio22, input$fecha_inicio22, input$fecha_final22)
-  })
+  #plot
   
 
-  
- #Default graficos
-  
-  output$plotlyGraphUI1 <- renderUI({
-    if (input$pais11 == "" || is.null(input$pais11)) {
-      tagList(h4("Seleccione el país para generar el gráfico.", style = 'color: gray;'))
-    }
+  #plot 1
+  output$plotOutput1 <- renderUI({
+   createBarPlot(dados_filtrados_caracterizacion_1(), "pais", "fecha_def", NULL, loading11(),  "Período", "Número de Muertes")
+ 
   })
   
-  output$plotlyGraphUI3 <- renderUI({
-    if (input$pais11 == "" || is.null(input$pais11)) {
-      tagList(h4("Seleccione el país para generar el gráfico.", style = 'color: gray;'))
-    }
+  #plot 3
+  output$plotOutput3 <- renderUI({
+    createBarPlot(dados_filtrados_caracterizacion_1(), "pais", "fecha_def", "grupo_edad", loading11(),  "Período", "Número de Muertes")
+    
   })
   
-  
-  output$plotlyGraphUI2 <- renderUI({
-    if (input$pais22 == "" || is.null(input$pais22)) {
-      tagList(h4("Seleccione el país para generar el gráfico.", style = 'color: gray;'))
-    }
-  })
-  
-  output$plotlyGraphUI4 <- renderUI({
-    if (input$pais22 == "" || is.null(input$pais22)) {
-      tagList(h4("Seleccione el país para generar el gráfico.", style = 'color: gray;'))
-    }
+  #plot 5
+  output$plotOutput5 <- renderUI({
+    createAreaPlot(dados = dados_filtrados_caracterizacion_1(), targetVar = "pais", timeVar = "fecha_def", groupVar =  "asistencia",is_loading =  loading11(),  xLabel = "Período", yLabel = "Percentagem")
+    
   })
   
   
+  #plot 2
+  output$plotOutput2 <- renderUI({
+    createBarPlot(dados_filtrados_caracterizacion_2(), "pais", "fecha_def", NULL, loading22(),  "Período", "Número de Muertes")
+    
+  })
   
-
+  #plot 4
+  output$plotOutput4 <- renderUI({
+    createBarPlot(dados_filtrados_caracterizacion_2(), "pais", "fecha_def", "grupo_edad", loading22(),  "Período", "Número de Muertes")
+    
+  })
   
-  #Gerando Grafico de Muertes Maternas
-  
-  observeEvent(input$btnGerar11, {
-    if (input$pais11 != "" && !is.null(dataFiltered_caracterizacion_1()) && nrow(dataFiltered_caracterizacion_1()) > 0) {
-      renderScatterPlotlyGraph(
-        output = output,
-        btn = input$btnGerar11,
-        plotId = "plotlyGraphUI1",
-        data = dataFiltered_caracterizacion_1(),
-        varName = "deaths",
-        title = "",
-        xaxis = "Periodo",
-        yaxis = "",
-        colorway = c("#4C78A8", "#54A2CC"),
-        #groupByVar = "edad",
-        errorMessage = "Esta localización no dispone de esta informacións"
-      )
-      
-      
-      renderScatterPlotlyGraph(
-        output = output,
-        btn = input$btnGerar11,
-        plotId = "plotlyGraphUI3",
-        data = dataFiltered_caracterizacion_1(),
-        varName = "deaths",
-        title = "Muertes Maternas",
-        xaxis = "Periodo",
-        yaxis = "",
-        colorway = c("#4C78A8", "#54A2CC"),
-        groupByVar = "edad",
-        errorMessage = "Esta localización no dispone de esta informacións"
-      )
-    }
-    else {
-      output$plotlyGraphUI1 <- renderUI({
-        tagList(h4("Seleccione una localización para generar los gráficos.", style = 'color: grey;'))
-      })
-      output$plotlyGraphUI3 <- renderUI({
-        tagList(h4("Seleccione una localización para generar los gráficos.", style = 'color: grey;'))
-      })
-    }
+  #plot 6
+  output$plotOutput6 <- renderUI({
+    createAreaPlot(dados = dados_filtrados_caracterizacion_2(), targetVar = "pais", timeVar = "fecha_def", groupVar =  "asistencia",is_loading =  loading22(),  xLabel = "Período", yLabel = "Percentagem")
+    
+    
   })
   
   
+  #Table 
+  output$table1 <- renderUI({
+    renderizar_tabela(dados_filtrados = dados_filtrados_caracterizacion_1(),  timeVar = "fecha_def", groupVar = "causa", is_loading = loading11())
+    
+  })
   
-     observeEvent(input$btnGerar22, {
-     if (input$pais22 != "" && !is.null(dataFiltered_caracterizacion_2()) && nrow(dataFiltered_caracterizacion_2()) > 0) {
-       renderScatterPlotlyGraph(
-         output = output,
-         btn = input$btnGerar22,
-         plotId = "plotlyGraphUI2",
-         data = dataFiltered_caracterizacion_2(),
-         varName = "deaths",
-         title = "",
-         xaxis = "Periodo",
-         yaxis = "Número de Muertes",
-         colorway = c("#4C78A8", "#54A2CC"),
-         #groupByVar = "edad",
-         errorMessage = "Esta localización no dispone de esta informacións"
-       )
-       
-       renderScatterPlotlyGraph(
-         output = output,
-         btn = input$btnGerar22,
-         plotId = "plotlyGraphUI4",
-         data = dataFiltered_caracterizacion_2(),
-         varName = "deaths",
-         title = "",
-         xaxis = "Periodo",
-         yaxis = "Número de Muertes",
-         colorway = c("#4C78A8", "#54A2CC"),
-         groupByVar = "edad",
-         errorMessage = "Esta localización no dispone de esta informacións"
-       )
-     }
-     else {
-       output$plotlyGraphUI2 <- renderUI({
-         tagList(h4("Seleccione una localización para generar los gráficos.", style = 'color: grey;'))
-       })
-       
-       output$plotlyGraphUI4 <- renderUI({
-         tagList(h4("Seleccione una localización para generar los gráficos.", style = 'color: grey;'))
-       })
-     }
-   })
-     
-     
+  output$table2 <- renderUI({
+    renderizar_tabela(dados_filtrados = dados_filtrados_caracterizacion_2(),  timeVar = "fecha_def", groupVar = "causa", is_loading = loading22())
+    
+  })
+  
   
   
 
