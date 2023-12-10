@@ -1,7 +1,14 @@
 
+
 source("server/simulatedData.R")
 
+
 lista_paises <<- simulated_data()
+
+
+
+
+
 
 caracterizacion_page <- argonTabItem(
   tabName = "caracterizacion",
@@ -26,11 +33,13 @@ caracterizacion_page <- argonTabItem(
   argonRow(
     argonColumn(
       width = 6,
+        
       argonCard(
         width = 12,
         border_level = 10,
         shadow = T,
         background_color = 'secondary',
+        actionButton("reset11", "Reset", class = "btn btn-info float-right", type = 2),
         h2("ESCENARIO 1", style = 'color:#009cda; text-align: center;'),
         h3("Opciones de Configuración", style = 'color:#009cda; text-align: center;'),
         
@@ -79,8 +88,35 @@ caracterizacion_page <- argonTabItem(
                       label = "Fecha Final:")
           )
         ),
-        actionButton("btnGerar11", "Analizar ", class = "btn btn-info",  type = 2)
+        
+        
+        
+        
+        
+        argonRow(
+          argonColumn(
+            width = 6,
+            dropdownButton(
+            inputId = "dropdown_tree",
+            label = "Indicadores",
+            icon = icon("sliders"),
+            status = "white",
+            circle = FALSE,
+            shinyTree("indicadores_tree_caracterizacion_1", checkbox = TRUE)
+          )),
+          argonColumn(
+            width = 6,
+            actionButton("btnGerar11", "Analizar ", class = "btn btn-info", type = 2),
+            uiOutput("error_message_display")
+            
+          )
+        )
+        
+        
+        
       )
+    
+    
     ),
     
     argonColumn(
@@ -90,6 +126,7 @@ caracterizacion_page <- argonTabItem(
         border_level = 10,
         shadow = T,
         background_color = 'secondary',
+        actionButton("reset22", "Reset", class = "btn btn-info float-right", type = 2),
         h2("ESCENARIO 2", style = 'color:#009cda; text-align: center;'),
         h3("Opciones de Configuración", style = 'color:#009cda; text-align: center;'),
         
@@ -140,66 +177,36 @@ caracterizacion_page <- argonTabItem(
           )
         ),
         
-        
-        actionButton("btnGerar22", "Analizar", class = "btn btn-info")
+        argonRow(
+          argonColumn(
+            width = 6,
+            dropdownButton(
+              inputId = "dropdown_tree",
+              label = "Indicadores",
+              icon = icon("sliders"),
+              status = "white",
+              circle = FALSE,
+              shinyTree("indicadores_tree_caracterizacion_2", checkbox = TRUE)
+            )),
+          argonColumn(
+            width = 6,
+            actionButton("btnGerar22", "Analizar ", class = "btn btn-info", type = 2),
+            uiOutput("error_message_display2")
+          )
+        )
       )
     )
   ),
-  
-  
   argonRow(
-    argonColumn(
-      width = 6,
-      argonCard(
-        width = 12,
-        border_level = 10,
-        shadow = T,
-        background_color = '#f6f9fc',
-        title = h2("Muertes Maternas", style = 'color:#009cda;'),
-        shinycssloaders::withSpinner(uiOutput("plotOutput1"))
-      )
-    
+  argonColumn(
+    width = 6,
+    uiOutput("plotOutput1")
     ),
-    
-    argonColumn(
-      width = 6,
-      argonCard(
-        width = 12,
-        border_level = 10,
-        shadow = T,
-        background_color = '#f6f9fc',
-        title = h2("Muertes Maternas", style = 'color:#009cda;'),
-        shinycssloaders::withSpinner(uiOutput("plotOutput2"))
-      )
+  
+  argonColumn(
+    width = 6,
+    uiOutput("plotOutput2")
     )
-    
-  ),
-  argonRow(
-    argonColumn(
-      width = 6,
-      argonCard(
-        width = 12,
-        border_level = 10,
-        shadow = T,
-        background_color = '#f6f9fc',
-        title = h2("Recibió Asistencia Media Antes de Morir", style = 'color:#009cda;'),
-        
-        shinycssloaders::withSpinner(uiOutput("plotOutput5"))
-      )
-    ),
-    
-    argonColumn(
-      width = 6,
-      argonCard(
-        width = 12,
-        border_level = 10,
-        shadow = T,
-        background_color = '#f6f9fc',
-        title = h2("Recibió Asistencia Media Antes de Morir", style = 'color:#009cda;'),
-        shinycssloaders::withSpinner(uiOutput("plotOutput6"))
-      )
-    )
-    
   ),
   
   
@@ -207,74 +214,55 @@ caracterizacion_page <- argonTabItem(
   argonRow(
     argonColumn(
       width = 6,
-      argonCard(
-        width = 12,
-        border_level = 10,
-        shadow = T,
-        background_color = '#f6f9fc',
-        title = h2("Grupos de Edad", style = 'color:#009cda;'),
-        
-        
-        shinycssloaders::withSpinner(uiOutput("plotOutput3"))
-      )
+      uiOutput("plotOutput5")
     ),
     
     argonColumn(
       width = 6,
-      argonCard(
-        width = 12,
-        border_level = 10,
-        shadow = T,
-        background_color = '#f6f9fc',
-        title = h2("Grupos de Edad", style = 'color:#009cda;'),
-        shinycssloaders::withSpinner(uiOutput("plotOutput4"))
-      )
+      uiOutput("plotOutput6")
     )
-    
-  ),
-  
-  argonRow(
-    argonColumn(
-      width = 6,
-      argonCard(
-        width = 12,
-        border_level = 10,
-        shadow = T,
-        background_color = '#f6f9fc',
-        title = h2("Porcentaje de Causas de Muertes por Código CIE-10", style = 'color:#009cda;'),
-        
-        shinycssloaders::withSpinner(uiOutput("table1", style = "width: 100%; overflow-x: auto; font-size:10px"))  
-      )
-    ),
-    
-    argonColumn(
-      width = 6,
-      argonCard(
-        width = 12,
-        border_level = 10,
-        shadow = T,
-        background_color = '#f6f9fc',
-        title = h2("Porcentaje de Causas de Muertes por Código CIE-10", style = 'color:#009cda;'),
-        shinycssloaders::withSpinner(uiOutput("table2", style = "width: 100%; overflow-x: auto; font-size:10px"))  
-        
-      )
-    )
-    
   ),
 
-  argonRow(argonColumn(
-    width = 12,
-    argonCard(
-      width = 12,
-      border_level = 10,
-      shadow = T,
-      background_color = 'secondary',
-      title = h2("Otros gráficos", style = 'color:#009cda;'),
-      h4("En desarrollo")
-      
-      
+  
+  argonRow(
+    argonColumn(
+      width = 6,
+      uiOutput("plotOutput3")
+    ),
+    
+    argonColumn(
+      width = 6,
+      uiOutput("plotOutput4")
     )
-  ))
+  ),
+  
+  argonRow(
+    argonColumn(
+      width = 6,
+      uiOutput("plotOutput7")
+    ),
+    
+    argonColumn(
+      width = 6,
+      uiOutput("plotOutput8")
+    )
+  )
+  # ,
+  # 
+  # argonRow(argonColumn(
+  #   width = 12,
+  #   argonCard(
+  #     width = 12,
+  #     border_level = 10,
+  #     shadow = T,
+  #     background_color = 'secondary',
+  #     title = h2("Otros gráficos", style = 'color:#009cda;'),
+  #     h4("En desarrollo")
+  #     
+  #     
+  #   )
+  # )
+  #)
   
   
 )

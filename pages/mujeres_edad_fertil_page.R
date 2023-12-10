@@ -59,7 +59,7 @@ mujeres_edad_fertil_page <- argonTabItem(
             width = 6,
             selectInput(
               inputId = "municipio14",
-              label = "Municipio:",
+              label = "Nivel Administrativo 2:",
               choices = NULL,
               selected = NULL
             )
@@ -111,7 +111,7 @@ mujeres_edad_fertil_page <- argonTabItem(
             width = 6,
             selectInput(
               inputId = "departamento25",
-              label = "Nivel Administrativo 2:",
+              label = "Nivel Administrativo 1:",
               choices = NULL,
               selected = NULL
             )
@@ -120,7 +120,7 @@ mujeres_edad_fertil_page <- argonTabItem(
             width = 6,
             selectInput(
               inputId = "municipio25",
-              label = "Municipio:",
+              label = "Nivel Administrativo 2:",
               choices = NULL,
               selected = NULL
             )

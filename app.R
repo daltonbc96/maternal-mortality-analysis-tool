@@ -2,6 +2,13 @@ library(shiny)
 library(argonR)
 library(argonDash)
 library(plotly)
+library(shinyTree)
+library(shinyWidgets)
+library(shinyjs)
+library(shinycssloaders)
+library(shinybusy)
+
+
 
 
 source("sideBar/horizontalArgonSidebar.R")
@@ -16,6 +23,9 @@ source("server/setting_server.R")
 
 
 ui <- fluidPage(
+  useShinyjs(),
+  #use_busy_modal(size = 80, color = "#0000FF"),
+
   tags$link(rel = "stylesheet", type = "text/css", href = "css/style.css"),
   argonDashPage(
     title = "Mortalidad Materna",

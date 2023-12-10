@@ -5,7 +5,7 @@ library(dplyr)
 
 createBarPlot <- function(dados, targetVar, timeVar, groupVar, is_loading, xLabel, yLabel) {
   if (!is_loading && (is.null(dados) || nrow(dados) < 1)) {
-    return(tags$h3("Seleccione una localización para generar la información", style = "color: grey; text-align: center;"))
+    return(NULL)#tags$h3("Seleccione una localización para generar la información", style = "color: grey; text-align: center;"))
   }
   
   if (!all(c(targetVar, timeVar, groupVar) %in% names(dados))) {

@@ -58,7 +58,7 @@ exceso_mm_page <- argonTabItem(
             width = 6,
             selectInput(
               inputId = "municipio13",
-              label = "Municipio:",
+              label = "Nivel Administrativo 2:",
               choices = NULL,
               selected = NULL
             )
@@ -110,7 +110,7 @@ exceso_mm_page <- argonTabItem(
             width = 6,
             selectInput(
               inputId = "departamento24",
-              label = "Nivel Administrativo 2:",
+              label = "Nivel Administrativo 1:",
               choices = NULL,
               selected = NULL
             )
@@ -119,7 +119,7 @@ exceso_mm_page <- argonTabItem(
             width = 6,
             selectInput(
               inputId = "municipio24",
-              label = "Municipio:",
+              label = "Nivel Administrativo 2:",
               choices = NULL,
               selected = NULL
             )

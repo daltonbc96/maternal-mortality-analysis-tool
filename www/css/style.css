@@ -8,4 +8,7 @@
     background-color: #4C78A8;
     color: white;           
   }
-
+  .jstree-icon.jstree-themeicon {
+    display: none !important;
+  }
+ 
