@@ -2,7 +2,7 @@
 
 source("server/simulatedData.R")
 
-lista_paises <<- simulated_data()
+#lista_paises <<- simulated_data()
 razon_mm_page <- argonTabItem(
   tabName = "razon_mm",
   

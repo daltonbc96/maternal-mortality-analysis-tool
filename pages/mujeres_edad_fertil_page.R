@@ -2,7 +2,7 @@
 
 source("server/simulatedData.R")
 
-lista_paises <<- simulated_data()
+#lista_paises <<- simulated_data()
 
 
 mujeres_edad_fertil_page <- argonTabItem(

@@ -6,50 +6,51 @@ library(lubridate)
 
 
 renderizar_tabela <- function(dados_filtrados, timeVar, groupVar, is_loading) {
-  processarDados <- function(dados, timeVar, groupVar) {
-    # Converter timeVar para formato de data e extrair o ano
-    dados <- dados %>%
-      mutate(!!sym(timeVar) := year(as.Date(!!sym(timeVar))))
-    
-    # Calcular a contagem de linhas por ano e por categoria de groupVar
+  # Subfunções definidas anteriormente
+  
+  verificarColunas <- function(dados, timeVar, groupVar) {
+    all(c(timeVar, groupVar) %in% names(dados))
+  }
+  
+  converterData <- function(dados, timeVar) {
+    dados %>% mutate(!!sym(timeVar) := year(as.Date(!!sym(timeVar), format = "%Y-%m-%d")))
+  }
+  
+  calcularAgrupamentos <- function(dados, timeVar, groupVar) {
     dados_agrupados <- dados %>%
       group_by(!!sym(timeVar), !!sym(groupVar)) %>%
       summarise(count = n(), .groups = 'drop')
     
-    # Calcular a contagem total por ano
     total_counts <- dados_agrupados %>%
       group_by(!!sym(timeVar)) %>%
       summarise(total = sum(count), .groups = 'drop')
     
-    # Calcular a porcentagem
-    dados_porcentagem <- dados_agrupados %>%
+    dados_agrupados %>%
       left_join(total_counts, by = timeVar) %>%
       mutate(percentage = round((count / total) * 100, 2))
-    
-    # Reestruturar os dados para o formato de tabela
-    dados_tabela <- dados_porcentagem %>%
-      select(!!sym(groupVar), !!sym(timeVar), percentage) %>%
-      pivot_wider(names_from = !!sym(timeVar), values_from = percentage)
-    
-    return(dados_tabela)
   }
   
+  estruturarTabela <- function(dados, groupVar, timeVar) {
+    dados %>%
+      select(!!sym(groupVar), !!sym(timeVar), percentage) %>%
+      pivot_wider(names_from = !!sym(timeVar), values_from = percentage)
+  }
   
-  mensage <- ""
+  # Lógica principal da função renderizar_tabela
   
-  if (!all(c(timeVar, groupVar) %in% names(dados_filtrados))) {
+  if (!verificarColunas(dados_filtrados, timeVar, groupVar)) {
     return(tags$h3("Esta localización no dispone de esta información", style = "color: grey; text-align: center;"))
   }
   
   if (is.null(dados_filtrados) && !is_loading) {
-    mensage <- "Seleccione una localización para generar la información"
-    return(tags$h3(mensage, style = "color: grey; text-align: center;"))
-    
+    return(tags$h3("Seleccione una localización para generar la información", style = "color: grey; text-align: center;"))
   } else if (!is.null(dados_filtrados) && nrow(dados_filtrados) > 0) {
-    dados_processados <- processarDados(dados_filtrados, timeVar, groupVar)
+    dados_filtrados <- converterData(dados_filtrados, timeVar)
+    dados_agrupados <- calcularAgrupamentos(dados_filtrados, timeVar, groupVar)
+    dados_tabela <- estruturarTabela(dados_agrupados, groupVar, timeVar)
     
     DT::datatable(
-      dados_processados,
+      dados_tabela,
       extensions = 'Buttons',
       class = 'cell-border stripe',
       options = list(
@@ -67,8 +68,6 @@ renderizar_tabela <- function(dados_filtrados, timeVar, groupVar, is_loading) {
     return(NULL)
   }
 }
-
-
 
 
 

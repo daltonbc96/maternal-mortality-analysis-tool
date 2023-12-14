@@ -1,3 +1,5 @@
+source("global.R")
+
 library(shiny)
 library(argonR)
 library(argonDash)
@@ -7,6 +9,15 @@ library(shinyWidgets)
 library(shinyjs)
 library(shinycssloaders)
 library(shinybusy)
+library(dbplyr)
+
+library(tidyr)
+library(duckdb)
+library(rlang) 
+library(dplyr)
+
+
+library(ggplot2)
 
 
 
@@ -23,6 +34,7 @@ source("server/setting_server.R")
 
 
 ui <- fluidPage(
+ 
   useShinyjs(),
   #use_busy_modal(size = 80, color = "#0000FF"),
 

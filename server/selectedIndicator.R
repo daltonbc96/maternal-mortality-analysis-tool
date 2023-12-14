@@ -1,12 +1,8 @@
 # Inicializa a lista global
 globalSelections <- reactiveValues(lists = list())
 
-
 # Função para atualizar a lista global específica
 updateGlobalSelections <- function(listID, newSelections) {
-  if (!listID %in% names(globalSelections$lists)) {
-    globalSelections$lists[[listID]] <- character(0)
-  }
   globalSelections$lists[[listID]] <- unique(newSelections)
 }
 
@@ -18,6 +14,10 @@ getGlobalSelections <- function(listID) {
   return(globalSelections$lists[[listID]])
 }
 
+# Função para verificar se um valor está selecionado
+isValueSelected <- function(listID, value) {
+  return(value %in% getGlobalSelections(listID))
+}
 
 
 
@@ -51,9 +51,8 @@ getSelectedNames <- function(tree_input, parent_items = NULL) {
   
   # Remove nomes duplicados
   selected_names <- unique(selected_names)
-  cat("Selected names after setdiff:", selected_names, "\n")
+  #cat("Selected names after setdiff:", selected_names, "\n")
   
   return(selected_names)
 }
-
 

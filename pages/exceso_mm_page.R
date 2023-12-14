@@ -2,7 +2,7 @@
 
 source("server/simulatedData.R")
 
-lista_paises <<- simulated_data()
+#lista_paises <<- simulated_data()
 
 exceso_mm_page <- argonTabItem(
   tabName = "exceso_mm",

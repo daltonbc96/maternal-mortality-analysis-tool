@@ -1,0 +1,41 @@
+{
+    "Número de Mortalidade Materna": {
+        "A34, O00-O99": {},
+        "ODS 3.1.1 A34, O00-O95, O98-O99": {},
+        "Por Causas Obstétricas Directas (A34, O00-O94) Y Obstétricas Indirectas (O98-O99)": {}
+    },
+    "Número de Mortalidade Materna por Causas Específicas": {
+        "Aborto O00-O07": {},
+        "Enfermedad Hipertensiva Del Embarazo, Edema Y Proteinuria O10-O16": {},
+        "Hemorragia Del Embarazo, Parto Y Puerperio O20, O44-O46, O67, O72": {},
+        "Sepsis Y Otras Infecciones Puerperales A34, O85-O86": {},
+        "Otras Complicaciones Principalmente Del Embarazo Y Parto O21, O23-O43, O47-O66, O68-O71, O73-O75": {},
+        "Otras Complicaciones Principalmente Puerperales O88-O92": {},
+        "Complicaciones Venosas En El Embarazo, Parto Y Puerperio O22, O87": {},
+        "Causas Obstétricas Indirectas Infecciosas O98": {},
+        "Causas Obstétricas Indirectas No Infeciosas O99": {},
+        "Muertes Maternas Tardías O96": {},
+        "Muertes Maternas Por Secuelas O97": {},
+        "Muerte Obstétrica De Causa No Especificada O95": {}
+    },
+    "Número de Mortalidade Materna por Aspectos Socio-Demográficos y de Atención": {
+        "Grupo De Edad 1 (10-19, 20-24, 25-29,30-39,40-49,50-54)": {},
+        "Grupo De Edad 2 (10-19,20-29,30-39, 40-54)": {},
+        "Lugar De Ocurrencia De La Defunción": {},
+        "Recibió Atención Medica Antes De Morir": {},
+        "Grupo Étnico/Raza": {},
+        "Aseguramiento/Derechohabiencia": {},
+        "Ocupación": {},
+        "Estado Civil": {},
+        "Personal Que Certifico La Defunción": {}
+    },
+    "Número de Mortalidade Materna por Indicadores Combinados": {
+        "Por Causa Y Año": {},
+        "Por Causa Y Por Grupo De Edad 1": {},
+        "Por Causa Y Por Grupo De Edad 2": {},
+        "Por Causa Y Lugar De Defunción": {},
+        "Por Causa Y Atención Recibida": {}
+    }
+}
+
+

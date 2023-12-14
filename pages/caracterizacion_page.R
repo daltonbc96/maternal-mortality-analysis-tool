@@ -1,9 +1,19 @@
 
 
-source("server/simulatedData.R")
 
+createGraphRow <- function( graphId1, graphId2, id = NULL) {
+  argonRow(  class = "custom-row-height", id = id,
+    argonColumn(
+      width = 6,
+      uiOutput(graphId1)
+    ),
+    argonColumn(
+      width = 6,
+      uiOutput(graphId2)
+    )
+  )
+}
 
-lista_paises <<- simulated_data()
 
 
 
@@ -197,72 +207,45 @@ caracterizacion_page <- argonTabItem(
       )
     )
   ),
-  argonRow(
-  argonColumn(
-    width = 6,
-    uiOutput("plotOutput1")
-    ),
+
+  createGraphRow(id = "A34, O00-O99", "plotOutput11", "plotOutput12"),
+  createGraphRow(id = "ODS 3.1.1 A34, O00-O95, O98-O99", "plotOutput21", "plotOutput22"),
+  createGraphRow(id = "Por Causas Obstétricas Directas (A34, O00-O94) Y Obstétricas Indirectas (O98-O99)", "plotOutput31", "plotOutput32"),
+  createGraphRow(id = "Aborto O00-O07", "plotOutput41", "plotOutput42"),
+  createGraphRow(id = "Enfermedad Hipertensiva Del Embarazo, Edema Y Proteinuria O10-O16", "plotOutput51", "plotOutput52"),
+  createGraphRow(id = "Hemorragia Del Embarazo, Parto Y Puerperio O20, O44-O46, O67, O72", "plotOutput61", "plotOutput62"),
+  createGraphRow(id = "Sepsis Y Otras Infecciones Puerperales A34, O85-O86", "plotOutput71", "plotOutput72"),
+  createGraphRow(id = "Otras Complicaciones Principalmente Del Embarazo Y Parto O21, O23-O43, O47-O66, O68-O71, O73-O75", "plotOutput81", "plotOutput82"),
+  createGraphRow(id = "Otras Complicaciones Principalmente Puerperales O88-O92", "plotOutput91", "plotOutput92"),
+  createGraphRow(id = "Complicaciones Venosas En El Embarazo, Parto Y Puerperio O22, O87", "plotOutput101", "plotOutput102"),
+  createGraphRow(id = "Causas Obstétricas Indirectas Infecciosas O98", "plotOutput111", "plotOutput112"),
+  createGraphRow(id = "Causas Obstétricas Indirectas No Infeciosas O99", "plotOutput121", "plotOutput122"),
+  createGraphRow(id = "Muertes Maternas Tardías O96", "plotOutput131", "plotOutput132"),
+  createGraphRow(id = "Muertes Maternas Por Secuelas O97", "plotOutput141", "plotOutput142"),
+  createGraphRow(id = "Muerte Obstétrica De Causa No Especificada O95", "plotOutput151", "plotOutput152"),
+  createGraphRow(id = "Grupo De Edad 1 (10-19, 20-24, 25-29,30-39,40-49,50-54)", "plotOutput161", "plotOutput162"),
+  createGraphRow(id = "Grupo De Edad 2 (10-19,20-29,30-39, 40-54)", "plotOutput171", "plotOutput172"),
+  createGraphRow(id = "Lugar De Ocurrencia De La Defunción", "plotOutput181", "plotOutput182"),
+  createGraphRow(id = "Recibió Atención Medica Antes De Morir", "plotOutput191", "plotOutput192"),
+  createGraphRow(id = "Grupo Étnico/Raza", "plotOutput291", "plotOutput292"),
+  createGraphRow(id = "Aseguramiento/Derechohabiencia", "plotOutput201", "plotOutput202"),
+  createGraphRow(id = "Ocupación", "plotOutput211", "plotOutput212"),
+  createGraphRow(id = "Estado Civil", "plotOutput221", "plotOutput222"),
+  createGraphRow(id = "Personal Que Certifico La Defunción", "plotOutput231", "plotOutput232"),
+  createGraphRow(id = "Por Causa Y Año", "plotOutput241", "plotOutput242"),
+  createGraphRow(id = "Por Causa Y Por Grupo De Edad 1", "plotOutput251", "plotOutput252"),
+  createGraphRow(id = "Por Causa Y Por Grupo De Edad 2", "plotOutput261", "plotOutput262"),
+  createGraphRow(id = "Por Causa Y Lugar De Defunción", "plotOutput271", "plotOutput272"),
+  createGraphRow(id = "Por Causa Y Atención Recibida", "plotOutput281", "plotOutput282")
   
-  argonColumn(
-    width = 6,
-    uiOutput("plotOutput2")
-    )
-  ),
   
   
   
-  argonRow(
-    argonColumn(
-      width = 6,
-      uiOutput("plotOutput5")
-    ),
-    
-    argonColumn(
-      width = 6,
-      uiOutput("plotOutput6")
-    )
-  ),
 
   
-  argonRow(
-    argonColumn(
-      width = 6,
-      uiOutput("plotOutput3")
-    ),
-    
-    argonColumn(
-      width = 6,
-      uiOutput("plotOutput4")
-    )
-  ),
-  
-  argonRow(
-    argonColumn(
-      width = 6,
-      uiOutput("plotOutput7")
-    ),
-    
-    argonColumn(
-      width = 6,
-      uiOutput("plotOutput8")
-    )
-  )
-  # ,
-  # 
-  # argonRow(argonColumn(
-  #   width = 12,
-  #   argonCard(
-  #     width = 12,
-  #     border_level = 10,
-  #     shadow = T,
-  #     background_color = 'secondary',
-  #     title = h2("Otros gráficos", style = 'color:#009cda;'),
-  #     h4("En desarrollo")
-  #     
-  #     
-  #   )
-  # )
-  #)
   
   
 )
+
+
+
