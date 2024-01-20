@@ -1,6 +1,4 @@
 
-
-
 caracterizacion_page <- argonTabItem(
   tabName = "caracterizacion",
   
@@ -33,7 +31,7 @@ caracterizacion_page <- argonTabItem(
         selectInput(
           inputId = "pais_caracterizacion",
           label = "",
-          choices = NULL,
+          choices = c("", names(db_lista_paises)),
           selected = NULL
         )
       )

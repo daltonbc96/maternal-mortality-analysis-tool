@@ -1,3 +1,5 @@
+options(shiny.autoload.r = TRUE)
+
 library(shiny)
 library(argonR)
 library(argonDash)
@@ -14,6 +16,14 @@ library(dplyr)
 library(ggplot2)
 
 
+source("R/sideBar/horizontalArgonSidebar.R")
+source("R/pages/initial_page/initial_page.R")
+source("R/pages/razon_mm_page/razon_mm_page.R")
+source("R/pages/caracterizacion_page/caracterizacion_page.R")
+source("R/pages/excesso_mm_page/exceso_mm_page.R")
+source("R/pages/mujeres_edad_fertil_page/mujeres_edad_fertil_page.R")
+source("R/footer/argonFooter.R")
+source("R/server/server.R")
 
 ui <- fluidPage(
  
