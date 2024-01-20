@@ -14,7 +14,7 @@ horizontalArgonSidebar <- argonDashSidebar(
     argonSidebarItem(tabName = "razon_mm",
                      "Rázon de MM"),
     argonSidebarItem(tabName = "caracterizacion",
-                     "Caracterización"),
+                     "Caracterización de MM"),
     argonSidebarItem(tabName = "exceso_mm",
                      "Exceso de MM"),
     argonSidebarItem(tabName = "mujeres_edad_fertil",

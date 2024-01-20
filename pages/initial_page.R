@@ -6,8 +6,9 @@ initial_page <-
       separator = TRUE,
       argonRow(argonColumn(
         width = 12,
-        h1("Mortalidad Materna", style = 'color:white;'),
-        h3("Análisis epidemiológico y estadístico", style = 'color:white;'),
+        h1(HTML("Análisis epidemiológico y estadístico <br> de la Mortalidad Materna"), style = 'color:white;'),
+        
+       # h3("Análisis epidemiológico y estadístico", style = 'color:white;'),
         br(),
         br(),
         br()
@@ -23,8 +24,19 @@ initial_page <-
         background_color = 'secondary',
         title = h2("Presentación", style = 'color:#009cda;'),
         h4(
-          "Esta herramienta ha sido desarrollada en respuesta a los desafíos enfrentados en el campo de la salud materna, y tiene como objetivo abordar una cuestión crítica identificada a nivel global y en la Región de las Américas. Ante la alarmante tasa de mortalidad materna, que se mantuvo en 68 por cada 100.000 nacimientos entre 2000 y 2020, y el agravamiento de esta situación debido a la pandemia de COVID-19, se ha vuelto imperativa la necesidad de un enfoque analítico robusto. Esta herramienta fue creada para integrar y sistematizar datos sobre defunciones maternas, facilitando el análisis y el soporte en la toma de decisiones, contribuyendo significativamente al cumplimiento del Objetivo de Desarrollo Sostenible 3 y a la mejora continua de la salud materna."
-        )
+          HTML( "La herramienta en línea  <strong> Análisis Epidemiológico y Estadístico de Mortalidad Materna </strong>  de OPS/OMS realiza un análisis 
+          completo y sistemático de la información de muertes maternas. La herramienta tabula automáticamente los datos y 
+          presenta indicadores básicos en tablas y figuras. La información empleada proviene de las bases de datos de estadística  
+          vital nacional del Ministerio de Salud o Instituto Nacional de Estadistica dependiendo del país y representa el dato 
+          observado sin ninguna correción. El nivel de calidad de la informacion es de diferente entre paises debido a la 
+          diferencia en la completitud y mala clasificacion de las muertes maternas.
+          <br>
+          <br>
+          El principal propósito de generar esta herramienta es contribuir a la toma de decisiones efectiva para el 
+          cumplimiento del <strong> Objetivo de Desarrollo Sostenible 3 (ODS-3)</strong>, disminución de la razón de mortalidad materna 
+          con un enfoque de equidad y mejoramiento de la salud maternal.
+"
+        ))
         
         
       )
@@ -37,9 +49,9 @@ initial_page <-
         shadow = T,
         background_color = 'secondary',
         status = "primary",
-        title = h2("Notas Técnicas", style = 'color:#009cda;'),
+        title = h2("Citación", style = 'color:#009cda;'),
         h4(
-          "Bajo la dirección técnica de los Dres. Patricia Soliz, Antonio Sanhueza, Thiago Rocha y Bremen de Mucio, esta herramienta es el resultado del esfuerzo colaborativo entre expertos de la OPS, Ministerios de Salud, Institutos de Estadística y académicos. Desarrollada por Dalton Breno Costa, la herramienta ofrece una interfaz dinámica para la integración de bases de datos sobre mortalidad materna, permitiendo análisis estandarizados y exhaustivos. Este enfoque innovador facilita la identificación de tendencias, patrones y áreas críticas, empoderando a los tomadores de decisiones con información precisa y actualizada para estrategias efectivas en salud materna."        )
+          "Análisis de mortalidad materna, OPS/OMS, 2023"        )
       
       )
     ))

@@ -25,141 +25,17 @@ mujeres_edad_fertil_page <- argonTabItem(
   
   argonRow(
     argonColumn(
-      width = 6,
-      argonCard(
-        width = 12,
-        border_level = 10,
-        shadow = T,
-        background_color = 'secondary',
-        h2("ESCENARIO 1", style = 'color:#009cda; text-align: center;'),
-        h3("Opciones de Configuración", style = 'color:#009cda; text-align: center;'),
-        
-        
-        argonRow(argonColumn(
-          width = 12,
-          selectInput(
-            inputId = 'pais14',
-            label = "País:",
-            choices = c("", names(lista_paises)),
-            selected = NULL
-            
-          )
-        )),
-        argonRow(
-          argonColumn(
-            width = 6,
-            selectInput(
-              inputId = "departamento14",
-              label = "Nivel Administrativo 1:",
-              choices = NULL,
-              selected = NULL
-            )
-          ),
-          argonColumn(
-            width = 6,
-            selectInput(
-              inputId = "municipio14",
-              label = "Nivel Administrativo 2:",
-              choices = NULL,
-              selected = NULL
-            )
-          )
-        ),
-        
-        # Linha para fecha inicio e fecha final
-        argonRow(
-          argonColumn(
-            width = 6,
-            dateInput(inputId = "fecha_inicio14",
-                      label = "Fecha de Inicio:")
-          ),
-          argonColumn(
-            width = 6,
-            dateInput(inputId = "fecha_final14",
-                      label = "Fecha Final:")
-          )
-        ),
-        actionButton("btn4", "Analizar ", class = "btn btn-info",  type = 2)
-      )
-    ),
-    
-    argonColumn(
-      width = 6,
-      argonCard(
-        width = 12,
-        border_level = 10,
-        shadow = T,
-        background_color = 'secondary',
-        h2("ESCENARIO 2", style = 'color:#009cda; text-align: center;'),
-        h3("Opciones de Configuración", style = 'color:#009cda; text-align: center;'),
-        
-        
-        
-        argonRow(argonColumn(
-          width = 12,
-          selectInput(
-            inputId = 'pais25',
-            label = "País:",
-            choices = c("", names(lista_paises)),
-            selected = NULL
-            
-          )
-        )),
-        
-        argonRow(
-          argonColumn(
-            width = 6,
-            selectInput(
-              inputId = "departamento25",
-              label = "Nivel Administrativo 1:",
-              choices = NULL,
-              selected = NULL
-            )
-          ),
-          argonColumn(
-            width = 6,
-            selectInput(
-              inputId = "municipio25",
-              label = "Nivel Administrativo 2:",
-              choices = NULL,
-              selected = NULL
-            )
-          )
-        ),
-        
-        argonRow(
-          argonColumn(
-            width = 6,
-            dateInput(inputId = "fecha_inicio25",
-                      label = "Fecha de Inicio:")
-          ),
-          argonColumn(
-            width = 6,
-            dateInput(inputId = "fecha_final25",
-                      label = "Fecha Final:")
-          )
-        ),
-        
-        
-        actionButton("btn5", "Analizar", class = "btn btn-info")
-      )
-    )
-  ),
-  
-  
-  argonRow(argonColumn(
-    width = 12,
-    argonCard(
       width = 12,
-      border_level = 10,
-      shadow = T,
-      background_color = 'secondary',
-      title = h2("Gráficos", style = 'color:#009cda;'),
-      h4("En desarrollo")
-      
-      
+      argonCard(
+        width = 12,
+        border_level = 10,
+        shadow = T,
+        background_color = 'secondary',
+        h2("Filtro", style = 'color:#009cda; text-align: left;'),
+      )
     )
-  )),
+  )
+  
   
   
 )
