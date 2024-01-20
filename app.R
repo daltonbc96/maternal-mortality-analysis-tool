@@ -1,5 +1,3 @@
-source("global.R")
-
 library(shiny)
 library(argonR)
 library(argonDash)
@@ -9,26 +7,11 @@ library(shinyjs)
 library(shinycssloaders)
 library(shinybusy)
 library(dbplyr)
-
 library(tidyr)
 library(duckdb)
 library(rlang) 
 library(dplyr)
-
-
 library(ggplot2)
-
-
-
-
-source("sideBar/horizontalArgonSidebar.R")
-source("pages/initial_page.R")
-source("pages/razon_mm_page.R")
-source("pages/caracterizacion_page.R")
-source("pages/exceso_mm_page.R")
-source("pages/mujeres_edad_fertil_page.R")
-source("footer/argonFooter.R")
-source("server/setting_server.R")
 
 
 

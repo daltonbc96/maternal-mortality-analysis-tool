@@ -1,1 +1,2 @@
-server/data/mexico_data.csv
+data/mexico_data.csv
+*.csv
