@@ -1,68 +1,131 @@
-library(ggplot2)
 library(dplyr)
+library(lubridate)
+library(ggplot2)
+library(plotly)
 
-createAnualBarPlot <- function(years, nationalData, firstLevelData, localityNames = NULL,
-                               x_axis_label = "Locality", y_axis_label = "Total Cases", 
-                               plot_title = "Annual COVID-19 Cases by Locality", legend_names = NULL) {
-  # Check if both vectors are NULL or empty
-  if ((is.null(nationalData) || length(nationalData) == 0) && 
-      (is.null(firstLevelData) || length(firstLevelData) == 0)) {
-    cat("No data available.")
-    return(NULL)
+createBarChart <- function(processedDataNacional, processedDataLevel1, intervaloAnos, 
+                           level1ColumnName = "nivel_adm_1",
+                           title = "Mortes maternas, por federação de residência, <país>, <ano selecionado>") {
+  convertToPlotlyWithCSVButton <- function(ggplot_object, plot_height = NULL) {
+    
+    CSV_SVGpath <- "M284.1,150.5V31H108.3c-11.7,0-21.1,9.4-21.1,21.1v407.8c0,11.7,9.4,21.1,21.1,21.1h295.3c11.7,0,21.1-9.4,21.1-21.1V171.6 H305.2C293.6,171.6,284.1,162.1,284.1,150.5z M199.8,277.1c0,3.9-3.1,7-7,7h-7c-7.8,0-14.1,6.3-14.1,14.1v28.1 c0,7.8,6.3,14.1,14.1,14.1h7c3.9,0,7,3.1,7,7v14.1c0,3.9-3.1,7-7,7h-7c-23.3,0-42.2-18.9-42.2-42.2v-28.1 c0-23.3,18.9-42.2,42.2-42.2h7c3.9,0,7,3.1,7,7V277.1z M238.7,368.5h-10.8c-3.9,0-7-3.1-7-7v-14.1c0-3.9,3.1-7,7-7h10.8 c5.2,0,9.1-3.1,9.1-5.8c0-1.1-0.7-2.3-1.9-3.4l-19.2-16.5c-7.4-6.3-11.7-15.4-11.7-24.7c0-18.7,16.7-33.9,37.3-33.9H263 c3.9,0,7,3.1,7,7v14.1c0,3.9-3.1,7-7,7h-10.8c-5.2,0-9.1,3.1-9.1,5.8c0,1.1,0.7,2.3,1.9,3.4l19.2,16.5c7.4,6.3,11.7,15.4,11.7,24.7 C275.9,353.3,259.2,368.5,238.7,368.5L238.7,368.5z M312.2,263v18.3c0,17.8,5,35.3,14.1,50c9.1-14.7,14.1-32.2,14.1-50V263 c0-3.9,3.1-7,7-7h14.1c3.9,0,7,3.1,7,7v18.3c0,31.2-11.3,60.5-31.9,82.7c-2.7,2.9-6.4,4.5-10.3,4.5s-7.6-1.6-10.3-4.5 c-20.6-22.1-31.9-51.5-31.9-82.7V263c0-3.9,3.1-7,7-7h14.1C309.1,256,312.2,259.1,312.2,263z M418.6,123.3l-86-86.1 c-4-4-9.3-6.2-14.9-6.2h-5.4v112.5h112.5v-5.4C424.8,132.6,422.6,127.2,418.6,123.3z"
+    
+    # Obter dados do gráfico ggplot
+    plot_data <- ggplot_build(ggplot_object)$plot$data
+    
+    # Converter plot_data para formato JSON para uso no JavaScript
+    plot_data_json <- jsonlite::toJSON(plot_data, dataframe = "rows")
+    
+    # Código JavaScript para o botão de download
+    js <- sprintf(
+      "function(gd) {
+      var data = %s;
+      var csvContent = 'data:text/csv;charset=utf-8,';
+      // Adicionando cabeçalho de coluna
+      csvContent += Object.keys(data[0]).join(',') + '\\n';
+      data.forEach(function(row, index) {
+        var rowContent = Object.values(row).join(',');
+        csvContent += rowContent + '\\n';
+      });
+      var encodedUri = encodeURI(csvContent);
+      var link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', 'data.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }", plot_data_json
+    )
+    
+    # Criar botão de exportação CSV
+    CSVexport <- list(
+      name = "Download Data",
+      icon = list(
+        path = CSV_SVGpath,
+        width = 512,
+        height = 512
+      ),
+      click = htmlwidgets::JS(js)
+    )
+    
+    # Converter o gráfico ggplot para plotly e adicionar botão de download CSV
+    plotly_object <- ggplotly(ggplot_object, height = plot_height, tooltip = "text") %>%
+      style(hoverinfo = "text", hovertemplate = "%{text}<extra></extra>")  %>%
+      config(
+        modeBarButtonsToAdd = list(CSVexport),
+        modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "zoomIn2d", "zoomOut2d", "autoScale2d", "resetScale2d", "hoverClosestCartesian", "hoverCompareCartesian")
+      )
+    
+    return(plotly_object)
   }
   
-  # Create data frames for national and first-level data
-  if (!is.null(nationalData) && length(nationalData) > 0) {
-    national_df <- data.frame(Locality = "National", Year = years, Cases = rep(nationalData, each = length(years)))
+  
+  # Processamento dos dados
+  processData <- function(data, levelName, locationColumnName = "location") {
+    data %>%
+      mutate(year = year(date_ocur)) %>%
+      group_by(year, !!sym(locationColumnName)) %>%
+      summarise(count = sum(count, na.rm = TRUE), .groups = 'drop') %>%
+      mutate(level = levelName)
   }
   
-  if (!is.null(firstLevelData) && length(firstLevelData) > 0) {
-    first_level_df <- data.frame(Locality = rep(localityNames, times = length(years)), Year = rep(years, each = length(localityNames)), Cases = rep(firstLevelData, each = length(years)))
-  }
+  # Adicionar uma coluna fictícia 'location' para processedDataNacional
+  processedDataNacional <- processedDataNacional %>%
+    mutate(location = "Nacional")
   
-  # Combine data frames (if both national and first-level data are available)
-  if (!is.null(nationalData) && length(nationalData) > 0 && 
-      !is.null(firstLevelData) && length(firstLevelData) > 0) {
-    df <- rbind(national_df, first_level_df)
-  } else if (!is.null(nationalData) && length(nationalData) > 0) {
-    df <- national_df
-  } else {
-    df <- first_level_df
-  }
+  # Renomear a coluna de localização para processedDataLevel1
+  processedDataLevel1 <- processedDataLevel1 %>%
+    rename(location = !!sym(level1ColumnName))
   
-  # Calculate the yearly sum of cases for each locality
-  df_summary <- df %>%
-    group_by(Locality, Year) %>%
-    summarize(TotalCases = sum(Cases))
+  # Aplicar a função de processamento
+  processedDataNacional <- processData(processedDataNacional, 'Nacional')
+  processedDataLevel1 <- processData(processedDataLevel1, 'Level1')
   
-  # Use a palette of blue shades
-  blue_palette <- colorRampPalette(c("#0072B2", "#00A6E3", "#00B2EB",  "#00C1F9"))
+  # Unir os dados processados
+  fullData <- rbind(processedDataNacional, processedDataLevel1) %>%
+    filter(year %in% intervaloAnos)
   
-  # Create the side-by-side bar chart with blue shades
-  p <- ggplot(df_summary, aes(x = Locality, y = TotalCases, fill = factor(Year))) +
-    geom_bar(stat = "identity", position = "dodge") +
-    labs(title = plot_title,
-         x = x_axis_label,
-         y = y_axis_label,
-         fill = "Year") +
+  # Criar o gráfico ggplot
+  plot <- ggplot(fullData, aes(x = reorder(location, location, FUN = function(x) -length(x)), 
+                               y = count, fill = as.factor(year))) +
+    geom_bar(stat = "identity", position = position_dodge()) +
+    labs(title = title, x = "Ubicación", y = "Número de Casos") +
+    scale_fill_discrete(name = "Ano") +
     theme_minimal() +
-    scale_fill_manual(values = blue_palette(length(unique(df_summary$Year))), name = "Year") +
-    theme(legend.position = "top")
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
   
-  return(p)
+  # Converter para Plotly
+  plotly_object <- convertToPlotlyWithCSVButton(plot) 
+  
+  # Adicionar texto para hovertemplate
+  for (i in 1:length(plotly_object$x$data)) {
+    plotly_object$x$data[[i]]$text <- paste("Ubicación: ", fullData$location, 
+                                            "<br>Año: ", fullData$year, 
+                                            "<br>Número de Casos: ", fullData$count)
+  }
+  
+  return(plotly_object)
 }
 
-# # Example usage of the function with sample data
-# years <- c(2022, 2023, 2024)
-# nationalData <- c(500, 600, 700)
-# firstLevelData <- c(100, 120, 150)
-# localityNames <- c("Locality A", "Locality B", "Locality C")
+
+
+# set.seed(123) # Para reprodutibilidade
 # 
-# # Generate random legend names
-# legend_names <- c("2022", "2023", "2024")
+# # Criar dados sintéticos para o primeiro nível administrativo
+# states <- c("Estado A", "Estado B", "Estado C", "Estado D")
+# dates_level1 <- seq(as.Date("2019-01-01"), as.Date("2022-12-31"), by = "month")
+# processedDataLevel1 <- expand.grid(date_ocur = dates_level1, location = states)
+# processedDataLevel1$count <- sample(5:20, nrow(processedDataLevel1), replace = TRUE)
 # 
-# # Calling the function with custom parameters
-# createAnualBarPlot(years, nationalData, firstLevelData, localityNames,
-#                x_axis_label = "Locality Name", y_axis_label = "Total Cases",
-#                plot_title = "COVID-19 Cases by Locality",
-#                legend_names = legend_names)
+# # Criar dados sintéticos para o nível nacional
+# dates_nacional <- seq(as.Date("2019-01-01"), as.Date("2022-12-31"), by = "month")
+# processedDataNacional <- data.frame(date_ocur = dates_nacional, location = "Nacional")
+# processedDataNacional$count <- sample(100:200, length(dates_nacional), replace = TRUE)
+# 
+# # Intervalo de anos para filtrar
+# intervaloAnos <- c(2020, 2021, 2022)
+# 
+# # Testar a função createBarChart
+# barChart <- createBarChart(processedDataNacional, processedDataLevel1, intervaloAnos)
+# barChart
+
