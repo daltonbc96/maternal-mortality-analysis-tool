@@ -42,7 +42,6 @@ ui <- fluidPage(
         caracterizacion_page,
         exceso_mm_page,
         mujeres_edad_fertil_page
-        
       )
     ),
     footer = argonFooter
