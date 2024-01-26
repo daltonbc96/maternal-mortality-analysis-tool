@@ -4,6 +4,8 @@ source("R/pages/caracterizacion_page/indicators/firstPlot.R")
 source("R/pages/caracterizacion_page/indicators/anualBarPlot.R")
 source("R/pages/caracterizacion_page/indicators/edadBarPlot.R")
 source("R/pages/caracterizacion_page/indicators/lugarOcurBarPlot.R")
+source("R/pages/caracterizacion_page/indicators/causaDirectaIndirecta.R")
+source("R/pages/caracterizacion_page/indicators/causaEspecificaBar.R")
 
 
 caracterizacion_page <- argonTabItem(
@@ -14,7 +16,9 @@ caracterizacion_page <- argonTabItem(
   plot_line3LevelsUI("plot_A34_O00_O99"),
   barChartUI("barChartModule"),
   edadBarPlotUI("edadBarPlot"),
-  BarPlotUI("lugarOcurBarPlot")
+  BarPlotUI("lugarOcurBarPlot"),
+  plotLineCauseUI("causaDiretaIndiretaLinePlot"),
+  horizontalBarPlotUI("causaEspecifica")
 )
 
 
