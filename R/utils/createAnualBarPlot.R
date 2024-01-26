@@ -1,8 +1,3 @@
-library(dplyr)
-library(lubridate)
-library(ggplot2)
-library(plotly)
-
 createBarChart <- function(processedDataNacional, processedDataLevel1, intervaloAnos, 
                            level1ColumnName = "nivel_adm_1",
                            title = "Mortes maternas, por federação de residência, <país>, <ano selecionado>") {
@@ -63,7 +58,7 @@ createBarChart <- function(processedDataNacional, processedDataLevel1, intervalo
   # Processamento dos dados
   processData <- function(data, levelName, locationColumnName = "location") {
     data %>%
-      mutate(year = year(date_ocur)) %>%
+      mutate(year = lubridate::year(date_ocur)) %>%
       group_by(year, !!sym(locationColumnName)) %>%
       summarise(count = sum(count, na.rm = TRUE), .groups = 'drop') %>%
       mutate(level = levelName)

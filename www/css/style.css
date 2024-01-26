@@ -12,6 +12,9 @@
     display: none !important;
   }
  
+  .js-plotly-plot .plotly .modebar-group {
+    transform: scale(0.5) !important;
+}
 
  
 

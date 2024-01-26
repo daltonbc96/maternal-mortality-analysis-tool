@@ -3,6 +3,8 @@ source("R/utils/createLinePlot.R")
 
 plot_line3LevelsUI <- function(id) {
   ns <- NS(id)
+  
+  
   argonCard(
     width = 12,
     border_level = 10,
@@ -91,42 +93,50 @@ plot_line3LevelsServer <- function(id, db_selected_country, column_firstLevel, c
       }
     })
     
+    
     # Dados processados para cada nível
     processedDataNacional <- reactive({
       processDataNacional(filteredData(), timeVar = timeVar, target = targetVar)
     })
+   
     
     processedDataLevel1 <- reactive({
      processDataLevel1(filteredData(), timeVar = timeVar, target = targetVar, level1 = column_firstLevel, filterLevel1 = input$firstLevel)
-    })
+  
+      })
+    
+    
+    
     
     processedDataLevel2 <- reactive({
       processDataLevel2(filteredData(), timeVar = timeVar, target = targetVar, level2 = column_secondLevel, filterLevel2 = input$secondLevel)
    
     })
     
-    
+
+   
+ 
     
     output$mainPlot <- renderUI({
       if (!is.null(processedDataNacional()) && nrow(processedDataNacional()) > 0) {
-        plotly::plotlyOutput(ns("linePlot"))
+        plotlyOutput(ns("linePlot"))
       } else {
         h3("Dados nacionais indisponíveis", style = 'color:#009cda; text-align: center;')
       }
     })
     
-    output$linePlot <- plotly::renderPlotly({
-
-     plot <-  createLinePlot(
-        processedDataNacional(),
-        processedDataLevel1(),
-        processedDataLevel2(),
+    output$linePlot <- renderPlotly({
+      plot <-  createLineChart(
+        processedDataNacional =  processedDataNacional(),
+        processedDataLevel1 =  processedDataLevel1(),
+        processedDataLevel2 =   processedDataLevel2(),
         title = "",
-        x_axis_label = "Periodo",
-        y_axis_label = "Número de Casos",
-        legend_labels = c("Datos Nacionales", "Primer Nivel", "Segundo Nivel")
+        xAxisLabel = "Periodo",
+        yAxisLabel = "Número de Casos",
+        legendLabels =  c("Datos Nacionales", "Primer Nivel", "Segundo Nivel"),
+        legendTitle = ""
       )
-
+      
      return(plot)
     })
     

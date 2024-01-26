@@ -35,7 +35,7 @@ barChartServer <- function(id, db_selected_country, column_firstLevel, targetVar
     
     observe({
       # Atualizar as opções do selectInput com base nos anos disponíveis
-      anosDisponiveis <- sort(unique(year(db_selected_country()[[timeVar]])))
+      anosDisponiveis <- sort(unique(lubridate::year(db_selected_country()[[timeVar]])))
       updateSelectInput(session, "yearRange", choices = anosDisponiveis, selected = "2015")
     })
     
@@ -45,7 +45,7 @@ barChartServer <- function(id, db_selected_country, column_firstLevel, targetVar
     processedDataNacional <- reactive({
       if (isDataAvailable(db_selected_country())) {
         filterYear <- db_selected_country() %>%
-          filter(year(date_ocur) %in% input$yearRange)
+          filter(lubridate::year(date_ocur) %in% input$yearRange)
         processDataNacional(filterYear, target = targetVar, timeVar = timeVar)
       } else {
         return(NULL)
@@ -56,7 +56,7 @@ barChartServer <- function(id, db_selected_country, column_firstLevel, targetVar
     processedDataLevel1 <- reactive({
       if (isDataAvailable(db_selected_country())) {
         filterYear <- db_selected_country() %>%
-          filter(year(date_ocur) %in% input$yearRange)
+          filter(lubridate::year(date_ocur) %in% input$yearRange)
         processDataLevel1(filterYear, level1 = column_firstLevel, target = targetVar, timeVar = timeVar)
       } else {
         return(NULL)

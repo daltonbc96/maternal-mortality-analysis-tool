@@ -29,8 +29,18 @@ ui <- fluidPage(
  
   useShinyjs(),
   #use_busy_modal(size = 80, color = "#0000FF"),
+  
+  tags$style(
+    "
+    .js-plotly-plot .plotly .modebar-group {
+    transform: scale(0.7) !important;
+    top: 0px; 
+    left: auto;
+    right: 80px; }
+    "
+  ),
 
-  tags$link(rel = "stylesheet", type = "text/css", href = "css/style.css"),
+ # tags$link(rel = "stylesheet", type = "text/css", href = "www/css/style.css"),
   argonDashPage(
     title = "Mortalidad Materna",
     description = 'Testing',
