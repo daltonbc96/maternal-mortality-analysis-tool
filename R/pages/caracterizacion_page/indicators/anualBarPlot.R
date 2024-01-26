@@ -35,7 +35,7 @@ barChartServer <- function(id, db_selected_country, column_firstLevel, targetVar
     
     observe({
       # Atualizar as opções do selectInput com base nos anos disponíveis
-      anosDisponiveis <- sort(unique(lubridate::year(db_selected_country()[[timeVar]])))
+      anosDisponiveis <- sort(unique(format(as.Date(db_selected_country()[[timeVar]]), "%Y")))
       updateSelectInput(session, "yearRange", choices = anosDisponiveis, selected = "2015")
     })
     

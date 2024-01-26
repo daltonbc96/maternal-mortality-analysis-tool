@@ -1,7 +1,4 @@
-library(ggplot2)
-library(dplyr)
-
-createGroupBarPlot <- function(processedDataNational, processedDataLevel1, processedDataLevel2, timeVar, groupVar) {
+createGroupSocioBarPlot <- function(processedDataNational, processedDataLevel1, processedDataLevel2, timeVar, groupVar) {
   
   convertToPlotlyWithCSVButton <- function(ggplot_object, plot_height = NULL) {
     
@@ -56,8 +53,7 @@ createGroupBarPlot <- function(processedDataNational, processedDataLevel1, proce
     return(plotly_object)
   }
   
-  
-  
+
   # Adiciona colunas 'location' e 'nivel' em cada conjunto de dados
   if (!is.null(processedDataNational) && nrow(processedDataNational) > 0) {
     processedDataNational <- processedDataNational %>%
@@ -72,7 +68,6 @@ createGroupBarPlot <- function(processedDataNational, processedDataLevel1, proce
       mutate(location = nivel_adm_2, nivel = "Segundo Nível")
   }
   
-  
   # Determina qual conjunto de dados usar
   dataToUse <- if (!is.null(processedDataLevel2) && nrow(processedDataLevel2) > 0) {
     processedDataLevel2
@@ -84,8 +79,7 @@ createGroupBarPlot <- function(processedDataNational, processedDataLevel1, proce
     stop("No data available")
   }
   
-  
-  # Converte timeVar e groupVar em símbolos para usá-los como nomes de colunas
+  # Converte timeVar e groupVar em símbolos
   timeVarSym <- rlang::sym(timeVar)
   groupVarSym <- rlang::sym(groupVar)
   
@@ -96,13 +90,12 @@ createGroupBarPlot <- function(processedDataNational, processedDataLevel1, proce
     summarise(count = sum(count, na.rm = TRUE), .groups = 'drop')
   
   # Criar o gráfico
-  plot <- ggplot(processedData, aes(x = !!groupVarSym, y = count, fill = as.factor(year))) +
+  plot <- ggplot(processedData, aes(x = year, y = count, fill = as.factor(!!groupVarSym))) +
     geom_bar(stat = "identity", position = position_dodge()) +
-    labs(title = "Mortes maternas por idade", x = "Grupo de Idade", y = "Número de Casos") +
-    scale_fill_discrete(name = "Ano") +
+    labs(title = "Distribuição por Ano e Categoria", x = "Ano", y = "Número de Casos", fill = "Categoria") +
+    scale_fill_discrete(name = "Categoria") +
     theme_minimal() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
-  
   
   # Converter para Plotly
   plotly_object <- convertToPlotlyWithCSVButton(plot) 
@@ -115,7 +108,6 @@ createGroupBarPlot <- function(processedDataNational, processedDataLevel1, proce
                                             "<br>Nível: ", processedData$nivel,
                                             "<br>Número de Casos: ", processedData$count)
   }
-  
   
   return(plotly_object)
 }
