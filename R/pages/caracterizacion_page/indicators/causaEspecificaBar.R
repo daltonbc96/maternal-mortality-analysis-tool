@@ -14,7 +14,7 @@ horizontalBarPlotUI <- function(id) {
   argonRow(
     argonColumn(width = 10,
                 style = "border-right: 1px solid #cccccc;",
-                uiOutput(ns("mainPlot"))
+                shinycssloaders::withSpinner(uiOutput(ns("mainPlot")))
                 
     ),
     argonColumn(width = 2,
@@ -75,8 +75,13 @@ horizontalBarPlotServer <- function(id, db_selected_country, column_firstLevel, 
       if (!is.null(data)) {
         choices <- c("", unique(na.omit(data[[column_firstLevel]])))
         
-        # Se a seleção atual não estiver nas novas opções, redefina para NULL
-        if (!(currentSelection %in% choices)) {
+        # Adicionando verificação para garantir que 'currentSelection' e 'choices' não sejam vazios
+        if (length(currentSelection) > 0 && length(choices) > 0) {
+          # Se a seleção atual não estiver nas novas opções, redefina para NULL
+          if (!(currentSelection %in% choices)) {
+            currentSelection <- NULL
+          }
+        } else {
           currentSelection <- NULL
         }
         
@@ -87,6 +92,7 @@ horizontalBarPlotServer <- function(id, db_selected_country, column_firstLevel, 
         shinyjs::hide("firstLevel") # Ocultar firstLevel
       }
     })
+    
     
     
     # Atualizar as opções de secondLevel quando o firstLevel mudar
@@ -140,13 +146,43 @@ horizontalBarPlotServer <- function(id, db_selected_country, column_firstLevel, 
 
     
     output$barPlot <- renderPlotly({
-      plot <-  createHorizontalBarPlot(processedDataNational = processedDataNacional(),
-                                  processedDataLevel1 = processedDataLevel1(),
-                                  processedDataLevel2 = processedDataLevel2(),
-                                  timeVar = timeVar,
-                                  groupVar = groupVar)
-     return(plot)
+      # Extrair informações dos filtros
+      selectedCountry <- unique(db_selected_country()$pais)
+      firstLevel <- input$firstLevel
+      secondLevel <- input$secondLevel
+      selectedYears <- sort(as.numeric(input$yearRange))  # Ordena e converte para números inteiros
+      numYears <- length(selectedYears)
+      
+      # Construir o texto do intervalo de anos
+      yearText <- if (numYears > 0) {
+        paste(selectedYears, collapse = ", ")
+      } else {
+        ""  # Caso não haja anos selecionados
+      }
+      
+      # Construir o título com base nos filtros selecionados
+      titleText <- if (!is.null(secondLevel) && secondLevel != "") {
+        sprintf("Mortalidade Materna por Causa Específica de %s de %s", secondLevel, yearText)
+      } else if (!is.null(firstLevel) && firstLevel != "") {
+        sprintf("Mortalidade Materna por Causa Específica de %s de %s", firstLevel, yearText)
+      } else {
+        sprintf("Mortalidade Materna por Causa Específica de %s de %s", selectedCountry, yearText)
+      }
+      
+
+        createHorizontalBarPlot(
+          processedDataNational = processedDataNacional(),
+          processedDataLevel1 = processedDataLevel1(),
+          processedDataLevel2 = processedDataLevel2(),
+          timeVar = timeVar,
+          groupVar = groupVar,
+          title = titleText,
+          intervaloAnos = input$yearRange
+        )
+      
     })
+    
+    
     
     
     

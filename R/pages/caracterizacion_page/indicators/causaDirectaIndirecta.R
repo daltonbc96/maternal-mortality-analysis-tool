@@ -14,7 +14,7 @@ plotLineCauseUI <- function(id) {
     argonRow(
       argonColumn(width = 10,
                   style = "border-right: 1px solid #cccccc;",
-                  uiOutput(ns("mainPlot"))
+                  shinycssloaders::withSpinner(uiOutput(ns("mainPlot")))
                   
       ),
       argonColumn(width = 2,

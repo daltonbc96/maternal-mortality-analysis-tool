@@ -1,22 +1,22 @@
 source("R/utils/processData.R")
-source("R/utils/createAnualBarPlot.R")
+source("R/utils/createAnualPrimeiroBarPlot.R")
 
-barChartUI  <- function(id) {
+barAnualPrimeiroPlotUI  <- function(id, title_block = "") {
   ns <- NS(id)
   argonCard(
     width = 12,
     border_level = 10,
     shadow = TRUE,
-    title =  h2("Teste", style = 'color:#009cda; text-align: left;'),
+    title =  h2(title_block, style = 'color:#009cda; text-align: left;'),
     argonRow(
       argonColumn(width = 10,
                   style = "border-right: 1px solid #cccccc;",
-                  uiOutput(ns("mainPlot"))
+                  shinycssloaders::withSpinner(uiOutput(ns("mainPlot")))
                   
       ),
       argonColumn(width = 2,
                   h2("Filtros", style = 'color:#009cda; text-align: left;'),
-                  selectizeInput(ns("yearRange"), "Selecione os Anos", 
+                  selectizeInput(ns("yearRange"), "Seleccionar los Años", 
                               choices = NULL, 
                               multiple = TRUE,
                               options = list(maxItems = 3))
@@ -24,7 +24,7 @@ barChartUI  <- function(id) {
     ))
 }
 
-barChartServer <- function(id, db_selected_country, column_firstLevel, targetVar, timeVar) {
+barAnualPrimeiroServer <- function(id, db_selected_country, column_firstLevel, targetVar, timeVar, title_personal = "") {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
     
@@ -68,16 +68,43 @@ barChartServer <- function(id, db_selected_country, column_firstLevel, targetVar
       if (!is.null(processedDataNacional()) && nrow(processedDataNacional()) > 0) {
         plotly::plotlyOutput(ns("barChart"))
       } else {
-        h3("Dados nacionais indisponíveis", style = 'color:#009cda; text-align: center;')
+        h3("Seleccione un país para consultar el indicador", style = 'color:#009cda; text-align: center;')
       }
     })
     
     
     # Renderizar o gráfico de barras
     output$barChart <- renderPlotly({
+      # Extrair informações dos filtros
+      selectedCountry <- unique(db_selected_country()$pais)
+      selectedYears <- as.numeric(input$yearRange)  # Converte para números inteiros
+      numYears <- length(selectedYears)
+      
+      # Construir o título com base no número de anos selecionados
+      yearText <- if (numYears > 0) {
+        paste(selectedYears, collapse = ", ")
+      } else {
+        ""  # Caso não haja anos selecionados
+      }
+      
+      titleText <- if (yearText != "") {
+        sprintf("%s de %s en Relación a Cada Ubicación de Primer Nivel de %s",title_personal, selectedCountry, yearText)
+      } else {
+        sprintf("")
+      }
+      
+      # Verificar se os dados estão disponíveis e renderizar o gráfico de barras
       if (isDataAvailable(processedDataNacional())) {
-        createBarChart( processedDataNacional = processedDataNacional(), processedDataLevel1 = processedDataLevel1(), intervaloAnos = input$yearRange, level1ColumnName = column_firstLevel )
+        createAnualPrimeiroBarPlot(
+          processedDataNacional = processedDataNacional(),
+          processedDataLevel1 = processedDataLevel1(),
+          intervaloAnos = input$yearRange,
+          level1ColumnName = column_firstLevel,
+          title = titleText
+        )
       }
     })
+    
+    
   })
 }

@@ -1,4 +1,4 @@
-createHorizontalBarPlot <- function(processedDataNational, processedDataLevel1, processedDataLevel2, timeVar, groupVar) {
+createHorizontalBarPlot <- function(processedDataNational, processedDataLevel1, processedDataLevel2, timeVar, groupVar, title = "", xAxisLabel = "", yAxisLabel = "", intervaloAnos) {
   
   convertToPlotlyWithCSVButton <- function(ggplot_object, plot_height = NULL) {
     
@@ -54,8 +54,7 @@ createHorizontalBarPlot <- function(processedDataNational, processedDataLevel1, 
   }
   
   
-  
-  # Adiciona colunas 'location' e 'nivel'
+  # Adiciona colunas 'location' e 'nivel' em cada conjunto de dados
   if (!is.null(processedDataNational) && nrow(processedDataNational) > 0) {
     processedDataNational <- processedDataNational %>%
       mutate(location = "Nacional", nivel = "Nacional")
@@ -80,38 +79,33 @@ createHorizontalBarPlot <- function(processedDataNational, processedDataLevel1, 
     stop("No data available")
   }
   
-  
   # Converte timeVar e groupVar em símbolos
   timeVarSym <- rlang::sym(timeVar)
   groupVarSym <- rlang::sym(groupVar)
-
-  # Processamento dos dados
   
+  # Processamento dos dados
   dataToUse <- dataToUse %>%
     mutate(year = format(as.Date(!!timeVarSym), "%Y")) %>%
     group_by(year, !!groupVarSym, location, nivel) %>%
-    summarise(count = sum(count, na.rm = TRUE), .groups = 'drop')
+    summarise(count = sum(count, na.rm = TRUE), .groups = 'drop') %>%
+    filter(year %in% intervaloAnos) %>%
+    mutate(hover_text = paste("Ano: ", year, 
+                              "<br>Categoria: ", !!groupVarSym, 
+                              "<br>Local: ", location,
+                              "<br>Nível: ", nivel,
+                              "<br>Número de Casos: ", count))
   
   # Criar o gráfico ggplot
-  plot <- ggplot(dataToUse, aes(y = count, x = reorder(!!groupVarSym, -count), fill = as.factor(year))) +
+  plot <- ggplot(dataToUse, aes(x = !!groupVarSym, y = count, fill = as.factor(year), text = hover_text)) +
     geom_bar(stat = "identity", position = position_dodge()) +
+    scale_fill_discrete(name = "Ano") +
     coord_flip() +
-    labs(y = "Quantidade de Casos", x = "Categoria", fill = "Ano") +
+    labs(title = title, x = xAxisLabel, y = yAxisLabel, fill = "Ano") +
     theme_minimal()
   
   # Converter para Plotly
-  plotly_object <- convertToPlotlyWithCSVButton(plot) 
+  plotly_object <- convertToPlotlyWithCSVButton(plot)
   
-  # Adicionar texto para hovertemplate
-  for (i in 1:length(plotly_object$x$data)) {
-    plotly_object$x$data[[i]]$text <- paste("Ano: ", dataToUse$year, 
-                                            "<br>Categoria: ", dataToUse[[groupVar]], 
-                                            "<br>Local: ", dataToUse$location,
-                                            "<br>Nível: ", dataToUse$nivel,
-                                            "<br>Número de Casos: ", dataToUse$count)
-  }
-  
-  
-
   return(plotly_object)
+
 }

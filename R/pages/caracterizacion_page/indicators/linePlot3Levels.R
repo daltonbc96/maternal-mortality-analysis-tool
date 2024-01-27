@@ -1,7 +1,7 @@
 source("R/utils/processData.R")
 source("R/utils/createLinePlot.R")
 
-plot_line3LevelsUI <- function(id) {
+linePlot3LevelsUI <- function(id, title_block = "") {
   ns <- NS(id)
   
   
@@ -9,11 +9,11 @@ plot_line3LevelsUI <- function(id) {
     width = 12,
     border_level = 10,
     shadow = TRUE,
-    title =  h2("Teste", style = 'color:#009cda; text-align: left;'),
+    title =  h2(title_block, style = 'color:#009cda; text-align: left;'),
   argonRow(
     argonColumn(width = 10,
                 style = "border-right: 1px solid #cccccc;",
-                uiOutput(ns("mainPlot"))
+                shinycssloaders::withSpinner(uiOutput(ns("mainPlot")))
                 
     ),
     argonColumn(width = 2,
@@ -25,10 +25,12 @@ plot_line3LevelsUI <- function(id) {
   ))
 }
 
-plot_line3LevelsServer <- function(id, db_selected_country, column_firstLevel, column_secondLevel, targetVar, timeVar) {
+linePlot3LevelsServer <- function(id, db_selected_country, column_firstLevel, column_secondLevel, targetVar, timeVar, title_personal = "") {
   moduleServer(id, function(input, output, session) {
     plot_data <- list()
     ns <- session$ns
+    
+  
     
     # Definir valores mínimos e máximos para o sliderInput
     observe({
@@ -114,30 +116,49 @@ plot_line3LevelsServer <- function(id, db_selected_country, column_firstLevel, c
     })
     
 
-   
- 
-    
     output$mainPlot <- renderUI({
       if (!is.null(processedDataNacional()) && nrow(processedDataNacional()) > 0) {
         plotlyOutput(ns("linePlot"))
       } else {
-        h3("Dados nacionais indisponíveis", style = 'color:#009cda; text-align: center;')
+        h3("Seleccione un país para consultar el indicador.", style = 'color:#009cda; text-align: center;')
       }
     })
     
     output$linePlot <- renderPlotly({
-      plot <-  createLineChart(
-        processedDataNacional =  processedDataNacional(),
-        processedDataLevel1 =  processedDataLevel1(),
-        processedDataLevel2 =   processedDataLevel2(),
-        title = "",
+      # Extrair informações dos filtros
+      selectedCountry <- unique(db_selected_country()$pais)
+      firstLevel <- input$firstLevel
+      secondLevel <- input$secondLevel
+      yearRange <- input$yearRange
+      
+      # Construir o título
+      yearText <- if (yearRange[1] == yearRange[2]) {
+        sprintf("%d", yearRange[1])
+      } else {
+        sprintf("%d - %d", yearRange[1], yearRange[2])
+      }
+      
+      titleText <- if (!is.null(secondLevel) && secondLevel != "") {
+        sprintf("%s de %s de %s", title_personal, secondLevel, yearText)
+      } else if (!is.null(firstLevel) && firstLevel != "") {
+        sprintf("%s de %s de %s", title_personal, firstLevel, yearText)
+      } else {
+        sprintf("%s de %s de %s", title_personal,selectedCountry, yearText)
+      }
+      
+      # Criar o gráfico com o título dinâmico
+      plot <- createLineChart(
+        processedDataNacional = processedDataNacional(),
+        processedDataLevel1 = processedDataLevel1(),
+        processedDataLevel2 = processedDataLevel2(),
+        title = titleText,
         xAxisLabel = "Periodo",
         yAxisLabel = "Número de Casos",
-        legendLabels =  c("Datos Nacionales", "Primer Nivel", "Segundo Nivel"),
+        legendLabels = c("Datos Nacionales", "Primer Nivel", "Segundo Nivel"),
         legendTitle = ""
       )
       
-     return(plot)
+      return(plot)
     })
     
     

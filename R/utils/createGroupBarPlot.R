@@ -1,7 +1,10 @@
 library(ggplot2)
 library(dplyr)
 
-createGroupBarPlot <- function(processedDataNational, processedDataLevel1, processedDataLevel2, timeVar, groupVar) {
+createGroupBarPlot <- function(processedDataNational, processedDataLevel1, processedDataLevel2, timeVar, groupVar, title = "",
+                               xAxisLabel = "Periodo",
+                               yAxisLabel = ""
+                              ) {
   
   convertToPlotlyWithCSVButton <- function(ggplot_object, plot_height = NULL) {
     
@@ -98,10 +101,9 @@ createGroupBarPlot <- function(processedDataNational, processedDataLevel1, proce
   # Criar o gráfico
   plot <- ggplot(processedData, aes(x = !!groupVarSym, y = count, fill = as.factor(year))) +
     geom_bar(stat = "identity", position = position_dodge()) +
-    labs(title = "Mortes maternas por idade", x = "Grupo de Idade", y = "Número de Casos") +
+    labs(title = title, x = xAxisLabel, y = yAxisLabel) +
     scale_fill_discrete(name = "Ano") +
-    theme_minimal() +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    theme_minimal() 
   
   
   # Converter para Plotly
@@ -109,9 +111,9 @@ createGroupBarPlot <- function(processedDataNational, processedDataLevel1, proce
   
   # Adicionar texto para hovertemplate
   for (i in 1:length(plotly_object$x$data)) {
-    plotly_object$x$data[[i]]$text <- paste("Ano: ", processedData$year, 
+    plotly_object$x$data[[i]]$text <- paste("Año: ", processedData$year, 
                                             "<br>Categoria: ", processedData[[groupVar]], 
-                                            "<br>Local: ", processedData$location,
+                                            "<br>Ubicación: ", processedData$location,
                                             "<br>Nível: ", processedData$nivel,
                                             "<br>Número de Casos: ", processedData$count)
   }

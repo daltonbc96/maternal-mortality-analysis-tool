@@ -1,11 +1,11 @@
 
 
 createLineChart <- function(processedDataNacional, processedDataLevel1, processedDataLevel2,
-                            title = "Título do Gráfico",
-                            xAxisLabel = "Data",
+                            title = "",
+                            xAxisLabel = "Periodo",
                             yAxisLabel = "Número de Casos",
-                            legendTitle = "Nível Administrativo",
-                            legendLabels = c("Nacional", "Nível 1", "Nível 2")) {
+                            legendTitle = "",
+                            legendLabels = c("Nacional", "Primer Nivel", "Segundo Nivel")) {
   
   
   convertToPlotlyWithCSVButton <- function(ggplot_object, plot_height = NULL) {
@@ -95,22 +95,22 @@ createLineChart <- function(processedDataNacional, processedDataLevel1, processe
     plot <- ggplot() +
       labs(title = title, x = xAxisLabel, y = yAxisLabel, color = legendTitle) +
       scale_y_continuous(limits = c(0, NA)) +
-      theme_minimal() + scale_color_manual(values = c("blue", "red", "green"), labels = legendLabels)
+      theme_minimal() 
     
     # Função auxiliar para preparar os dados
     prepareData <- function(data, colorName, levelLabel) {
       if (!is.null(data) && nrow(data) > 0) {
         location_column <- ifelse(levelLabel == "Nacional", "Nacional", 
-                                  ifelse(levelLabel == "Nível 1", "nivel_adm_1", "nivel_adm_2"))
+                                  ifelse(levelLabel == "Primer Nivel", "nivel_adm_1", "nivel_adm_2"))
         
         data <- data %>%
           mutate(
             date_ocur = as.Date(date_ocur),
             location = ifelse(levelLabel == "Nacional", "Nacional", data[[location_column]]),
-            hover_text = paste("Data: ", format(date_ocur, "%d/%m/%Y"), 
+            hover_text = paste("Fecha: ", format(date_ocur, "%d/%m/%Y"), 
                                "<br>Número de Casos: ", count, 
                                "<br>Nível: ", levelLabel,
-                               "<br>Localização: ", location)
+                               "<br>Ubicación: ", location)
           )
         
         suppressWarnings(plot <<- plot + geom_line(data = data, aes(x = date_ocur, y = count, color = colorName, group = colorName, text = hover_text)))
@@ -121,8 +121,8 @@ createLineChart <- function(processedDataNacional, processedDataLevel1, processe
     
     # Aplicar a função auxiliar a cada conjunto de dados
     nacional <- prepareData(processedDataNacional, "Nacional", "Nacional")
-    nivel1 <- prepareData(processedDataLevel1, "Nível 1", "Nível 1")
-    nivel2 <- prepareData(processedDataLevel2, "Nível 2", "Nível 2")
+    nivel1 <- prepareData(processedDataLevel1, "Primer Nivel", "Primer Nivel")
+    nivel2 <- prepareData(processedDataLevel2, "Segundo Nivel", "Segundo Nivel")
     
     
   

@@ -1,4 +1,7 @@
-createGroupSocioBarPlot <- function(processedDataNational, processedDataLevel1, processedDataLevel2, timeVar, groupVar) {
+createGroupSocioBarPlot <- function(processedDataNational, processedDataLevel1, processedDataLevel2, timeVar, groupVar, 
+                                    title = "",
+                                    xAxisLabel = "",
+                                    yAxisLabel = "") {
   
   convertToPlotlyWithCSVButton <- function(ggplot_object, plot_height = NULL) {
     
@@ -44,7 +47,6 @@ createGroupSocioBarPlot <- function(processedDataNational, processedDataLevel1, 
     
     # Converter o gráfico ggplot para plotly e adicionar botão de download CSV
     plotly_object <- ggplotly(ggplot_object, height = plot_height, tooltip = "text") %>%
-      style(hoverinfo = "text", hovertemplate = "%{text}<extra></extra>")  %>%
       config(
         modeBarButtonsToAdd = list(CSVexport),
         modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "zoomIn2d", "zoomOut2d", "autoScale2d", "resetScale2d", "hoverClosestCartesian", "hoverCompareCartesian")
@@ -83,31 +85,30 @@ createGroupSocioBarPlot <- function(processedDataNational, processedDataLevel1, 
   timeVarSym <- rlang::sym(timeVar)
   groupVarSym <- rlang::sym(groupVar)
   
-  # Preparação dos dados
   processedData <- dataToUse %>%
     mutate(year = format(as.Date(!!timeVarSym), "%Y")) %>%
     group_by(year, !!groupVarSym, location, nivel) %>%
-    summarise(count = sum(count, na.rm = TRUE), .groups = 'drop')
+    summarise(count = sum(count, na.rm = TRUE), .groups = 'drop') %>%
+    mutate(hover_text = paste("Año: ", year, 
+                              "<br>Categoria: ", !!groupVarSym, 
+                              "<br>Ubicación: ", location,
+                              "<br>Nível: ", nivel,
+                              "<br>Número de Casos: ", count))
   
-  # Criar o gráfico
-  plot <- ggplot(processedData, aes(x = year, y = count, fill = as.factor(!!groupVarSym))) +
+
+  # Criar o gráfico ggplot
+  plot <- ggplot(processedData, aes(x = year, y = count, fill = as.factor(!!groupVarSym), text = hover_text)) +
     geom_bar(stat = "identity", position = position_dodge()) +
-    labs(title = "Distribuição por Ano e Categoria", x = "Ano", y = "Número de Casos", fill = "Categoria") +
-    scale_fill_discrete(name = "Categoria") +
+    labs(title = title, x = xAxisLabel, y = yAxisLabel, fill = "") +
     theme_minimal() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
   
-  # Converter para Plotly
-  plotly_object <- convertToPlotlyWithCSVButton(plot) 
   
-  # Adicionar texto para hovertemplate
-  for (i in 1:length(plotly_object$x$data)) {
-    plotly_object$x$data[[i]]$text <- paste("Ano: ", processedData$year, 
-                                            "<br>Categoria: ", processedData[[groupVar]], 
-                                            "<br>Local: ", processedData$location,
-                                            "<br>Nível: ", processedData$nivel,
-                                            "<br>Número de Casos: ", processedData$count)
-  }
+
+  # Converter para Plotly
+  plotly_object <- convertToPlotlyWithCSVButton(plot)
+  
+  
   
   return(plotly_object)
 }
