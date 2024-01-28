@@ -1,4 +1,7 @@
-createGroupLinePlot <- function(processedDataNational, processedDataLevel1, processedDataLevel2, timeVar, groupVar) {
+createGroupLinePlot <- function(processedDataNational, processedDataLevel1, processedDataLevel2, timeVar, groupVar, 
+                                title = "",
+                                xAxisLabel = "",
+                                yAxisLabel = "") {
   
   convertToPlotlyWithCSVButton <- function(ggplot_object, plot_height = NULL) {
     
@@ -87,27 +90,23 @@ createGroupLinePlot <- function(processedDataNational, processedDataLevel1, proc
   # Preparação dos dados
   processedData <- dataToUse %>%
     group_by(!!timeVarSym, !!groupVarSym, location, nivel) %>%
-    summarise(count = sum(count, na.rm = TRUE), .groups = 'drop')
+    summarise(count = sum(count, na.rm = TRUE), .groups = 'drop') %>%
+    mutate(hover_text = paste("Data: ", format(as.Date(!!timeVarSym), "%d/%m/%Y"),
+                              "<br>Categoria: ", !!groupVarSym, 
+                              "<br>Número de Casos: ", count,
+                              "<br>Localização: ", location,
+                              "<br>Nível: ", nivel))
   
-  # Criar o gráfico
-  plot <- ggplot(processedData, aes(x = !!timeVarSym, y = count, group = !!groupVarSym, color = as.factor(!!groupVarSym))) +
+  # Criar o gráfico ggplot
+  plot <- ggplot(processedData, aes(x = !!timeVarSym, y = count, group = !!groupVarSym, color = as.factor(!!groupVarSym), text = hover_text)) +
     geom_line() +
-    labs(title = "Distribuição de Casos ao Longo do Tempo", x = "Data", y = "Número de Casos", color = "Categoria") +
+    labs(title = title, x = xAxisLabel, y = yAxisLabel, color = "") +
     theme_minimal() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
   
   # Converter para Plotly
   plotly_object <- convertToPlotlyWithCSVButton(plot) 
   
-
-  # Adicionar texto para hovertemplate
-  for (i in 1:length(plotly_object$x$data)) {
-    plotly_object$x$data[[i]]$text <- paste("Data: ", format(processedData[[timeVar]], "%d/%m/%Y"),
-                                            "<br>Categoria: ", processedData[[groupVar]], 
-                                            "<br>Número de Casos: ", processedData$count,
-                                            "<br>Localização: ", processedData$location,
-                                            "<br>Nível: ", processedData$nivel)
-  }
   
   return(plotly_object)
 }

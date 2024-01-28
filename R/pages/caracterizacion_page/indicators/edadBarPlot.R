@@ -37,7 +37,7 @@ edadBarPlotServer <- function(id, db_selected_country, column_firstLevel, column
         years <- format(as.Date(db_selected_country()$date_ocur), "%Y")
         min_year <- min(as.numeric(years), na.rm = TRUE)
         max_year <- max(as.numeric(years), na.rm = TRUE)
-        updateSliderInput(session, "yearRange", min = min_year, max = max_year, value = c(min_year, max_year))
+        updateSliderInput(session, "yearRange", min = min_year, max = max_year, value = c(2015, 2015))
       }
     })
     

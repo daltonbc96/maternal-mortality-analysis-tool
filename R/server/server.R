@@ -32,8 +32,9 @@ server <- function(input, output, session) {
   
   
   
-  plotLineCauseServer(id = "causaDiretaIndiretaLinePlot", db_selected_country = db_selected_country, column_firstLevel = "nivel_adm_1", column_secondLevel = "nivel_adm_2",targetVar =  "num_mortalidad_grupo_1", timeVar = "date_ocur", groupVar = "persona_certifico")
-  horizontalBarPlotServer(id = "causaEspecifica", db_selected_country = db_selected_country, column_firstLevel = "nivel_adm_1", column_secondLevel = "nivel_adm_2",targetVar =  "num_mortalidad_grupo_1", timeVar = "date_ocur", groupVar = "persona_certifico")
+  groupLinePlotServer(id = "causaDiretaIndiretaLinePlot", db_selected_country = db_selected_country, column_firstLevel = "nivel_adm_1", column_secondLevel = "nivel_adm_2",targetVar =  "num_mortalidad_grupo_1", timeVar = "date_ocur", groupVar = "persona_certifico", title_personal = "Número de Muertes Maternas (ODS 3.1.1 A34, O00-O95, O98-O99) por Causas Directas y Indirectas")
+  horizontalBarPlotServer(id = "causaEspecifica", db_selected_country = db_selected_country, column_firstLevel = "nivel_adm_1", column_secondLevel = "nivel_adm_2",targetVar =  "num_mortalidad_grupo_1", timeVar = "date_ocur", groupVar = "persona_certifico", title_personal = "Mortalidade Materna (ODS 3.1.1 A34, O00-O95, O98-O99) por Causa Específica", yAxisLabel = "Número de Casos")
+  groupLinePlotServer(id = "causaEspecificaLinePlot", db_selected_country = db_selected_country, column_firstLevel = "nivel_adm_1", column_secondLevel = "nivel_adm_2",targetVar =  "num_mortalidad_grupo_1", timeVar = "date_ocur", groupVar = "persona_certifico", title_personal = "Mortalidade Materna (ODS 3.1.1 A34, O00-O95, O98-O99) por Causa Específica")
   
 }
 

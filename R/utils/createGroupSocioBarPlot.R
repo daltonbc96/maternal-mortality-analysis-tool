@@ -89,6 +89,7 @@ createGroupSocioBarPlot <- function(processedDataNational, processedDataLevel1, 
     mutate(year = format(as.Date(!!timeVarSym), "%Y")) %>%
     group_by(year, !!groupVarSym, location, nivel) %>%
     summarise(count = sum(count, na.rm = TRUE), .groups = 'drop') %>%
+    filter(!is.na(!!groupVarSym)) %>%
     mutate(hover_text = paste("Año: ", year, 
                               "<br>Categoria: ", !!groupVarSym, 
                               "<br>Ubicación: ", location,

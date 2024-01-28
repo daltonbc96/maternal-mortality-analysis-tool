@@ -2,7 +2,7 @@ source("R/utils/processData.R")
 source("R/utils/createGroupLinePlot.R")
 
 
-plotLineCauseUI <- function(id) {
+groupLinePlotUI <- function(id, title_block) {
   ns <- NS(id)
   
   
@@ -10,7 +10,7 @@ plotLineCauseUI <- function(id) {
     width = 12,
     border_level = 10,
     shadow = TRUE,
-    title =  h2("Teste", style = 'color:#009cda; text-align: left;'),
+    title =  h2(title_block, style = 'color:#009cda; text-align: left;'),
     argonRow(
       argonColumn(width = 10,
                   style = "border-right: 1px solid #cccccc;",
@@ -26,7 +26,10 @@ plotLineCauseUI <- function(id) {
     ))
 }
 
-plotLineCauseServer <- function(id, db_selected_country, column_firstLevel, column_secondLevel, targetVar, timeVar, groupVar) {
+groupLinePlotServer <- function(id, db_selected_country, column_firstLevel, column_secondLevel, targetVar, timeVar, groupVar,  
+                                title_personal  = "",
+                                xAxisLabel = "",
+                                yAxisLabel = "") {
   moduleServer(id, function(input, output, session) {
     plot_data <- list()
     ns <- session$ns
@@ -37,7 +40,7 @@ plotLineCauseServer <- function(id, db_selected_country, column_firstLevel, colu
         years <- format(as.Date(db_selected_country()$date_ocur), "%Y")
         min_year <- min(as.numeric(years), na.rm = TRUE)
         max_year <- max(as.numeric(years), na.rm = TRUE)
-        updateSliderInput(session, "yearRange", min = min_year, max = max_year, value = c(min_year, max_year))
+        updateSliderInput(session, "yearRange", min = min_year, max = max_year, value = c(2015, 2015))
       }
     })
     
@@ -123,7 +126,7 @@ plotLineCauseServer <- function(id, db_selected_country, column_firstLevel, colu
         plotlyOutput(ns("barPlot"))
         
       } else {
-        h3("Dados nacionais indisponíveis", style = 'color:#009cda; text-align: center;')
+        h3("Seleccione un país para consultar el indicador", style = 'color:#009cda; text-align: center;')
       }
     })
     
@@ -131,12 +134,41 @@ plotLineCauseServer <- function(id, db_selected_country, column_firstLevel, colu
     
     
     output$barPlot <- renderPlotly({
+      
+      if (!is.null(processedDataNacional())) {
+        # Extrair informações dos filtros
+        selectedCountry <- unique(db_selected_country()$pais)
+        firstLevel <- input$firstLevel
+        secondLevel <- input$secondLevel
+        yearRange <- input$yearRange
+        
+        # Construir o título
+        yearText <- if (yearRange[1] == yearRange[2]) {
+          sprintf("%d", yearRange[1])
+        } else {
+          sprintf("%d - %d", yearRange[1], yearRange[2])
+        }
+        
+        titleText <- if (!is.null(secondLevel) && secondLevel != "") {
+          sprintf("%s de %s de %s", title_personal, secondLevel, yearText)
+        } else if (!is.null(firstLevel) && firstLevel != "") {
+          sprintf("%s de %s de %s", title_personal, firstLevel, yearText)
+        } else {
+          sprintf("%s de %s de %s", title_personal, selectedCountry, yearText)
+        }
+      
       plot <-  createGroupLinePlot(processedDataNational = processedDataNacional(),
                                        processedDataLevel1 = processedDataLevel1(),
                                        processedDataLevel2 = processedDataLevel2(),
                                        timeVar = timeVar,
-                                       groupVar = groupVar)
+                                       groupVar = groupVar,
+                                   title = titleText,
+                                   xAxisLabel = xAxisLabel,
+                                   yAxisLabel = yAxisLabel)
       return(plot)
+      }else {
+        return(NULL)
+      }
     })
     
     

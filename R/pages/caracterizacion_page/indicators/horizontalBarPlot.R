@@ -2,7 +2,7 @@ source("R/utils/processData.R")
 source("R/utils/createHorizontalBarPlot.R")
 
 
-horizontalBarPlotUI <- function(id) {
+horizontalBarPlotUI <- function(id, title_block = "") {
   ns <- NS(id)
   
   
@@ -10,7 +10,7 @@ horizontalBarPlotUI <- function(id) {
     width = 12,
     border_level = 10,
     shadow = TRUE,
-    title =  h2("Teste", style = 'color:#009cda; text-align: left;'),
+    title =  h2(title_block, style = 'color:#009cda; text-align: left;'),
   argonRow(
     argonColumn(width = 10,
                 style = "border-right: 1px solid #cccccc;",
@@ -29,19 +29,28 @@ horizontalBarPlotUI <- function(id) {
   ))
 }
 
-horizontalBarPlotServer <- function(id, db_selected_country, column_firstLevel, column_secondLevel, targetVar, timeVar, groupVar) {
+horizontalBarPlotServer <- function(id, db_selected_country, column_firstLevel, column_secondLevel, targetVar, timeVar, groupVar, yAxisLabel= "", xAxisLabel = "", title_personal= "") {
   moduleServer(id, function(input, output, session) {
     plot_data <- list()
     ns <- session$ns
     
 
+    # Funções para verificar se os dados estão disponíveis e não são NULL
+    isDataAvailable <- function(data) {
+      !is.null(data) && nrow(data) > 0
+    }
+    
     observe({
-      # Atualizar as opções do selectInput com base nos anos disponíveis
-      anosDisponiveis <- sort(unique(format(as.Date(db_selected_country()[[timeVar]]), "%Y")))
-      updateSelectInput(session, "yearRange", choices = anosDisponiveis, selected = "2015")
+      if (isDataAvailable(db_selected_country())) {
+        # Atualizar as opções do selectInput com base nos anos disponíveis
+        anosDisponiveis <- sort(unique(format(as.Date(db_selected_country()[[timeVar]]), "%Y")))
+        updateSelectInput(session, "yearRange", choices = anosDisponiveis, selected = "2015")
+        shinyjs::show("yearRange") # Mostrar yearRange
+      }else{
+        shinyjs::hide("yearRange")
+      }
+      
     })
-    
-    
     
     
     # Dados filtrados com base em targetVar e anos
@@ -138,7 +147,7 @@ horizontalBarPlotServer <- function(id, db_selected_country, column_firstLevel, 
         plotlyOutput(ns("barPlot"))
 
       } else {
-        h3("Dados nacionais indisponíveis", style = 'color:#009cda; text-align: center;')
+        h3("Seleccione un país para consultar el indicador", style = 'color:#009cda; text-align: center;')
       }
     })
     
@@ -162,11 +171,11 @@ horizontalBarPlotServer <- function(id, db_selected_country, column_firstLevel, 
       
       # Construir o título com base nos filtros selecionados
       titleText <- if (!is.null(secondLevel) && secondLevel != "") {
-        sprintf("Mortalidade Materna por Causa Específica de %s de %s", secondLevel, yearText)
+        sprintf("%s de %s de %s", title_personal, secondLevel, yearText)
       } else if (!is.null(firstLevel) && firstLevel != "") {
-        sprintf("Mortalidade Materna por Causa Específica de %s de %s", firstLevel, yearText)
+        sprintf("%s de %s de %s", title_personal, firstLevel, yearText)
       } else {
-        sprintf("Mortalidade Materna por Causa Específica de %s de %s", selectedCountry, yearText)
+        sprintf("%s de %s de %s", title_personal, selectedCountry, yearText)
       }
       
 
@@ -177,7 +186,10 @@ horizontalBarPlotServer <- function(id, db_selected_country, column_firstLevel, 
           timeVar = timeVar,
           groupVar = groupVar,
           title = titleText,
-          intervaloAnos = input$yearRange
+          intervaloAnos = input$yearRange,
+          xAxisLabel = xAxisLabel,
+          yAxisLabel = yAxisLabel
+          
         )
       
     })

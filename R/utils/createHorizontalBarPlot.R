@@ -89,7 +89,7 @@ createHorizontalBarPlot <- function(processedDataNational, processedDataLevel1, 
     group_by(year, !!groupVarSym, location, nivel) %>%
     summarise(count = sum(count, na.rm = TRUE), .groups = 'drop') %>%
     filter(year %in% intervaloAnos) %>%
-    mutate(hover_text = paste("Ano: ", year, 
+    mutate(hover_text = paste("Año: ", year, 
                               "<br>Categoria: ", !!groupVarSym, 
                               "<br>Local: ", location,
                               "<br>Nível: ", nivel,
@@ -100,7 +100,7 @@ createHorizontalBarPlot <- function(processedDataNational, processedDataLevel1, 
     geom_bar(stat = "identity", position = position_dodge()) +
     scale_fill_discrete(name = "Ano") +
     coord_flip() +
-    labs(title = title, x = xAxisLabel, y = yAxisLabel, fill = "Ano") +
+    labs(title = title, x = xAxisLabel, y = yAxisLabel, fill = "") +
     theme_minimal()
   
   # Converter para Plotly

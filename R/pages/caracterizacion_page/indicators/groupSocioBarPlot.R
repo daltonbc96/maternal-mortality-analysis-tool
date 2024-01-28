@@ -47,9 +47,9 @@ groupSocioBarPlotServer <- function(id, db_selected_country, column_firstLevel, 
     output$mainPlot <- renderUI({
       status <- dataExists()
       if (status == "noData") {
-        h3("Seleccione un país para consultar el indicador.", style = 'color:#009cda; text-align: center;')
+        h3("Seleccione un país para consultar el indicador", style = 'color:#009cda; text-align: center;')
       } else if (status == "noGroupVar") {
-        h3("Esta localización no dispone de esta información", style = "color: grey; text-align: center;")
+        h3("Esta ubicación no dispone de esta información", style = "color: grey; text-align: center;")
       } else {
         plotlyOutput(ns("barPlot"))
       }

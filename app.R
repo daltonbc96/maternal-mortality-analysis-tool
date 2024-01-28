@@ -16,6 +16,11 @@ library(dplyr)
 library(ggplot2)
 
 
+#Precisa ajustar os outros 2 plots
+# Precisa ajustar dados:
+#-tirar categoricas grandes
+
+
 source("R/sideBar/horizontalArgonSidebar.R")
 source("R/pages/initial_page/initial_page.R")
 source("R/pages/razon_mm_page/razon_mm_page.R")
@@ -37,6 +42,11 @@ ui <- fluidPage(
     top: 0px; 
     left: auto;
     right: 80px; }
+    
+    #my_sidebar .navbar-brand img {
+    width: 200px;
+    height: auto;
+  }
     "
   ),
 

@@ -38,7 +38,7 @@ linePlot3LevelsServer <- function(id, db_selected_country, column_firstLevel, co
         years <- format(as.Date(db_selected_country()$date_ocur), "%Y")
         min_year <- min(as.numeric(years), na.rm = TRUE)
         max_year <- max(as.numeric(years), na.rm = TRUE)
-        updateSliderInput(session, "yearRange", min = min_year, max = max_year, value = c(min_year, max_year))
+        updateSliderInput(session, "yearRange", min = min_year, max = max_year, value = c(2015, 2015))
       }
     })
     
@@ -120,7 +120,7 @@ linePlot3LevelsServer <- function(id, db_selected_country, column_firstLevel, co
       if (!is.null(processedDataNacional()) && nrow(processedDataNacional()) > 0) {
         plotlyOutput(ns("linePlot"))
       } else {
-        h3("Seleccione un país para consultar el indicador.", style = 'color:#009cda; text-align: center;')
+        h3("Seleccione un país para consultar el indicador", style = 'color:#009cda; text-align: center;')
       }
     })
     

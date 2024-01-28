@@ -34,9 +34,15 @@ barAnualPrimeiroServer <- function(id, db_selected_country, column_firstLevel, t
     }
     
     observe({
+      if (isDataAvailable(db_selected_country())) {
       # Atualizar as opções do selectInput com base nos anos disponíveis
       anosDisponiveis <- sort(unique(format(as.Date(db_selected_country()[[timeVar]]), "%Y")))
       updateSelectInput(session, "yearRange", choices = anosDisponiveis, selected = "2015")
+      shinyjs::show("yearRange") # Mostrar yearRange
+      }else{
+        shinyjs::hide("yearRange")
+      }
+      
     })
     
     
