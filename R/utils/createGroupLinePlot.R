@@ -47,7 +47,6 @@ createGroupLinePlot <- function(processedDataNational, processedDataLevel1, proc
     
     # Converter o gráfico ggplot para plotly e adicionar botão de download CSV
     plotly_object <- ggplotly(ggplot_object, height = plot_height, tooltip = "text") %>%
-      style(hoverinfo = "text", hovertemplate = "%{text}<extra></extra>")  %>%
       config(
         modeBarButtonsToAdd = list(CSVexport),
         modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "zoomIn2d", "zoomOut2d", "autoScale2d", "resetScale2d", "hoverClosestCartesian", "hoverCompareCartesian")
@@ -91,10 +90,12 @@ createGroupLinePlot <- function(processedDataNational, processedDataLevel1, proc
   processedData <- dataToUse %>%
     group_by(!!timeVarSym, !!groupVarSym, location, nivel) %>%
     summarise(count = sum(count, na.rm = TRUE), .groups = 'drop') %>%
-    mutate(hover_text = paste("Data: ", format(as.Date(!!timeVarSym), "%d/%m/%Y"),
+    filter(!is.na(!!groupVarSym)) %>%
+    complete(!!timeVarSym, !!groupVarSym, location, nivel, fill = list(count = 0)) %>%
+    mutate(hover_text = paste("Fecha: ", format(as.Date(!!timeVarSym), "%d/%m/%Y"),
                               "<br>Categoria: ", !!groupVarSym, 
                               "<br>Número de Casos: ", count,
-                              "<br>Localização: ", location,
+                              "<br>Ubicación: ", location,
                               "<br>Nível: ", nivel))
   
   # Criar o gráfico ggplot

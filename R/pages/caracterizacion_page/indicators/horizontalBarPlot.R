@@ -19,7 +19,7 @@ horizontalBarPlotUI <- function(id, title_block = "") {
     ),
     argonColumn(width = 2,
                 h2("Filtros", style = 'color:#009cda; text-align: left;'),
-                selectizeInput(ns("yearRange"), "Selecione os Anos", 
+                selectizeInput(ns("yearRange"), "Selecionnar los Años", 
                                choices = NULL, 
                                multiple = TRUE,
                                options = list(maxItems = 3)),

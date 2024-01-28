@@ -16,9 +16,7 @@ library(dplyr)
 library(ggplot2)
 
 
-#Precisa ajustar os outros 2 plots
-# Precisa ajustar dados:
-#-tirar categoricas grandes
+
 
 
 source("R/sideBar/horizontalArgonSidebar.R")

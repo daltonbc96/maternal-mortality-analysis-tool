@@ -91,7 +91,7 @@ createHorizontalBarPlot <- function(processedDataNational, processedDataLevel1, 
     filter(year %in% intervaloAnos) %>%
     mutate(hover_text = paste("Año: ", year, 
                               "<br>Categoria: ", !!groupVarSym, 
-                              "<br>Local: ", location,
+                              "<br>Ubicación: ", location,
                               "<br>Nível: ", nivel,
                               "<br>Número de Casos: ", count))
   
